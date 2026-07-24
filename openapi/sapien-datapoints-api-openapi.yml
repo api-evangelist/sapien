@@ -1,0 +1,121 @@
+openapi: 3.1.0
+info:
+  description: External developer API authenticated with API keys.
+  title: Sapien Developer Datapoints API
+  version: 1.0.0
+servers:
+- url: /developer/v1
+security:
+- bearerAuth: []
+tags:
+- name: Datapoints
+paths:
+  /datapoints/{datapointId}/consensus:
+    get:
+      description: 'Fetch the terminal consensus outcome for a datapoint in the API key''s organization: the headline quality rating and consensus strength, plus the consensusDecisionId. Resolves a datapoint.consensus_reached webhook back to its outcome. Returns 409 consensus_not_finalized when the datapoint exists but has not reached terminal consensus yet, and 404 datapoint_not_found when there is no such datapoint in the organization.'
+      operationId: getDatapointConsensus
+      parameters:
+      - description: Datapoint ID.
+        in: path
+        name: datapointId
+        required: true
+        schema:
+          description: Datapoint ID.
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatapointConsensusResource'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Get datapoint consensus
+      tags:
+      - Datapoints
+components:
+  schemas:
+    DatapointConsensusResource:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DatapointConsensusResource.json
+          format: uri
+          readOnly: true
+          type: string
+        consensusDecisionId:
+          description: ID of the terminal consensus decision (matches the datapoint.consensus_reached webhook).
+          type: string
+        consensusStrength:
+          description: Consensus Strength for the datapoint.
+          format: double
+          type: number
+        datapointId:
+          description: Datapoint ID.
+          type: string
+        projectId:
+          description: ID of the datapoint's project.
+          type: string
+        qualityRatingMean:
+          description: Directional Quality Rating (0-100), consensus-weighted mean.
+          format: double
+          type: number
+        qualityRatingMedian:
+          description: Directional Quality Rating (0-100), consensus-weighted median.
+          format: double
+          type: number
+      required:
+      - datapointId
+      - projectId
+      - consensusDecisionId
+      - qualityRatingMean
+      - qualityRatingMedian
+      - consensusStrength
+      type: object
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: API key
+      description: 'Developer API key using the Authorization: Bearer poq_live_... header.'
+      scheme: bearer
+      type: http

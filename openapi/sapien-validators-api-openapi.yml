@@ -1,0 +1,902 @@
+openapi: 3.1.0
+info:
+  description: External developer API authenticated with API keys.
+  title: Sapien Developer Datapoints Validators API
+  version: 1.0.0
+servers:
+- url: /developer/v1
+security:
+- bearerAuth: []
+tags:
+- name: Validators
+paths:
+  /projects/{projectId}/classes:
+    get:
+      description: List the validator classes declared in a project's spec ([validators].classes). These class ids are what you grant to a validator (standalone, or via the assign endpoint).
+      operationId: listProjectClasses
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProjectClassesOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: List a project's validator classes
+      tags:
+      - Validators
+  /projects/{projectId}/invites:
+    get:
+      description: List the project's non-fulfilled invites (pending + cancelled), cursor-paginated, newest first. Accepted invitees are project validators and are visible via GET /validators, not this endpoint. Each row carries a status field ("pending" or "cancelled").
+      operationId: listProjectInvites
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      - description: Maximum number of invites to return (1-100).
+        explode: false
+        in: query
+        name: limit
+        schema:
+          default: 20
+          description: Maximum number of invites to return (1-100).
+          format: int64
+          maximum: 100
+          minimum: 1
+          type: integer
+      - description: Opaque pagination cursor from a previous response's nextCursor. Omit for the first page.
+        explode: false
+        in: query
+        name: cursor
+        schema:
+          description: Opaque pagination cursor from a previous response's nextCursor. Omit for the first page.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProjectInvitesOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: List a project's invites
+      tags:
+      - Validators
+    post:
+      description: 'Create a pending invite for an email to join a project as a validator. Idempotent upsert keyed by (lower(email), project_id): a pending invite is returned unchanged, a cancelled one is reactivated, an already-accepted one is returned with status "accepted" and no email is sent. Optional classId + evidenceNote pre-stage a class grant on the invite (fulfilled at login acceptance); the class must be declared in the project''s spec. The invite email is sent via the ProjectInvite template unless sendEmail is false.'
+      operationId: createProjectInvite
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectInviteInputBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectInviteResource'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Invite a validator by email
+      tags:
+      - Validators
+  /projects/{projectId}/invites/{inviteId}:
+    delete:
+      description: Soft-cancel a pending invite (stamps cancelled_at; the row is preserved for audit). Idempotent on a pending invite. An already-cancelled invite returns 404 invite_not_found (it has left the pending list); an already-accepted invite returns 409 invite_already_accepted (cancelling would erase the audit trail of an active project_validator membership); a cross-project invite returns 404 invite_not_found.
+      operationId: cancelProjectInvite
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      - description: Invite ID.
+        in: path
+        name: inviteId
+        required: true
+        schema:
+          description: Invite ID.
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelProjectInviteOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Cancel a pending invite
+      tags:
+      - Validators
+  /projects/{projectId}/validators/{validatorId}/classes:
+    post:
+      description: 'Grant a spec-declared class to a validator on a project. Exclusive: any other active class the validator holds on the project is revoked first. The class must be declared in the project''s spec.'
+      operationId: grantValidatorClass
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      - description: Validator (user) ID.
+        in: path
+        name: validatorId
+        required: true
+        schema:
+          description: Validator (user) ID.
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrantValidatorClassInputBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidatorClassGrantResource'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Grant a validator a class on a project
+      tags:
+      - Validators
+  /projects/{projectId}/validators/{validatorId}/classes/{classId}:
+    delete:
+      description: 'Soft-revoke a validator''s class grant on a project. Idempotent: revoking a class the validator does not hold is a no-op.'
+      operationId: revokeValidatorClass
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      - description: Validator (user) ID.
+        in: path
+        name: validatorId
+        required: true
+        schema:
+          description: Validator (user) ID.
+          format: uuid
+          type: string
+      - description: Class ID to revoke.
+        in: path
+        name: classId
+        required: true
+        schema:
+          description: Class ID to revoke.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevokeValidatorClassOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Revoke a validator's class on a project
+      tags:
+      - Validators
+  /validators:
+    get:
+      description: With ?email= set, looks up the single org validator matching that email (case-insensitive). Without ?email=, lists the org validator roster (org is_validator members union project-assigned validators), cursor-paginated, newest joined_at first. A lookup that matches no user, or a user who is neither an org validator nor assigned to a project in the org, returns 404 validator_not_found — the API never leaks whether a user exists outside your organization.
+      operationId: listValidators
+      parameters:
+      - description: Optional email to look up a single org validator (case-insensitive). When set, limit/cursor are ignored.
+        explode: false
+        in: query
+        name: email
+        schema:
+          description: Optional email to look up a single org validator (case-insensitive). When set, limit/cursor are ignored.
+          type: string
+      - description: Maximum number of validators to return (1-100); list mode only.
+        explode: false
+        in: query
+        name: limit
+        schema:
+          default: 20
+          description: Maximum number of validators to return (1-100); list mode only.
+          format: int64
+          maximum: 100
+          minimum: 1
+          type: integer
+      - description: Opaque pagination cursor from a previous response's nextCursor; list mode only.
+        explode: false
+        in: query
+        name: cursor
+        schema:
+          description: Opaque pagination cursor from a previous response's nextCursor; list mode only.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListValidatorsOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: List or look up validators
+      tags:
+      - Validators
+  /validators/{validatorId}/assign:
+    post:
+      description: Assign a validator to one or more projects in the API key's organization. The validator must already be a validator of the organization unless autoEnroll is set (which promotes an existing org member to validator first). Every project must belong to the organization. Applied as an all-or-nothing batch.
+      operationId: assignValidator
+      parameters:
+      - description: Validator (user) ID.
+        in: path
+        name: validatorId
+        required: true
+        schema:
+          description: Validator (user) ID.
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignValidatorInputBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignValidatorOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Assign a validator to projects
+      tags:
+      - Validators
+  /validators/{validatorId}/projects:
+    get:
+      description: List the projects a validator is currently assigned to within the API key's organization. Returns an empty list for an unknown validator or one with no assignments.
+      operationId: listValidatorProjects
+      parameters:
+      - description: Validator (user) ID.
+        in: path
+        name: validatorId
+        required: true
+        schema:
+          description: Validator (user) ID.
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListValidatorProjectsOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: List a validator's project assignments
+      tags:
+      - Validators
+  /validators/{validatorId}/unassign:
+    post:
+      description: 'Revoke a validator''s assignment to one or more projects in the API key''s organization. Idempotent: unassigning a project the validator is not assigned to is a no-op. Class grants are separate — revoke them via DELETE /projects/{projectId}/validators/{validatorId}/classes/{classId}.'
+      operationId: unassignValidator
+      parameters:
+      - description: Validator (user) ID.
+        in: path
+        name: validatorId
+        required: true
+        schema:
+          description: Validator (user) ID.
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnassignValidatorInputBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnassignValidatorOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Unassign a validator from projects
+      tags:
+      - Validators
+components:
+  schemas:
+    ValidatorAssignmentResource:
+      additionalProperties: false
+      properties:
+        assignedAt:
+          description: RFC3339 time the validator was assigned to the project.
+          type: string
+        assignmentId:
+          description: ID of the validator↔project assignment.
+          type: string
+        projectId:
+          description: ID of the assigned project.
+          type: string
+        projectName:
+          description: Name of the assigned project.
+          type: string
+      required:
+      - assignmentId
+      - projectId
+      - projectName
+      - assignedAt
+      type: object
+    RevokeValidatorClassOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/RevokeValidatorClassOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        revoked:
+          description: Always true; revocation is idempotent.
+          type: boolean
+      required:
+      - revoked
+      type: object
+    AssignValidatorInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/AssignValidatorInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        autoEnroll:
+          description: When true, promote the user to an org validator (is_validator) before assignment if they are an existing org member but not yet flagged a validator. The user must have a user row; an unknown validatorId still returns 404 validator_not_found.
+          type: boolean
+        projects:
+          description: Projects in the API key's organization to assign this validator to, each optionally granting a class.
+          items:
+            $ref: '#/components/schemas/AssignProjectEntry'
+          minItems: 1
+          type:
+          - array
+          - 'null'
+      required:
+      - projects
+      type: object
+    ValidatorClassResource:
+      additionalProperties: false
+      properties:
+        consensusWeight:
+          description: Relative weight of this class's votes in consensus.
+          format: double
+          type: number
+        id:
+          description: Class ID (referenced when granting a class).
+          type: string
+        label:
+          description: Human-readable class label.
+          type: string
+        model:
+          description: AI model backing the class; null for human classes.
+          type:
+          - string
+          - 'null'
+        rewardCents:
+          description: Reward per validation for this class, in cents.
+          format: int64
+          type: integer
+        stakeWei:
+          description: Stake required per validation for this class, in wei.
+          type: string
+        type:
+          description: 'Class type: "human" or "ai".'
+          type: string
+      required:
+      - id
+      - label
+      - type
+      - rewardCents
+      - stakeWei
+      - consensusWeight
+      - model
+      type: object
+    CancelProjectInviteOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CancelProjectInviteOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        cancelled:
+          description: Always true on success; cancellation is idempotent for a pending invite.
+          type: boolean
+      required:
+      - cancelled
+      type: object
+    UnassignValidatorOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/UnassignValidatorOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        unassigned:
+          description: Number of project assignments processed (revoke is idempotent, so an already-unassigned project still counts).
+          format: int64
+          type: integer
+      required:
+      - unassigned
+      type: object
+    CreateProjectInviteInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectInviteInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        classId:
+          description: Optional class to pre-stage on the invite (fulfilled at login acceptance). Must be declared in the project's spec.
+          type: string
+        email:
+          description: Email address to invite (case-insensitive; normalized on write).
+          minLength: 1
+          type: string
+        evidenceNote:
+          description: Why the invitee qualifies for classId; required when classId is set.
+          type: string
+        sendEmail:
+          description: Send the invite email (ProjectInvite template). Defaults to true; set to false to skip the email (e.g. for testing or custom delivery).
+          type: boolean
+      required:
+      - email
+      type: object
+    ValidatorResource:
+      additionalProperties: false
+      properties:
+        email:
+          description: Validator email; empty when the user has none on file.
+          type: string
+        evmAddress:
+          description: Validator EVM address; empty when the user has none on file.
+          type: string
+        isOriginator:
+          description: True when the user is an originator of the organization.
+          type: boolean
+        isValidator:
+          description: True when the user is a validator of the organization (is_validator flag or project assignment).
+          type: boolean
+        joinedAt:
+          description: RFC3339 time the user became an org validator (org membership created_at, or first project assignment).
+          type: string
+        subject:
+          description: Validator subject (auth identifier).
+          type: string
+        userId:
+          description: Validator (user) ID.
+          type: string
+      required:
+      - userId
+      - subject
+      - email
+      - evmAddress
+      - isOriginator
+      - isValidator
+      - joinedAt
+      type: object
+    AssignProjectEntry:
+      additionalProperties: false
+      properties:
+        classId:
+          description: Optional class to grant on this project (must be declared in the project's spec).
+          type: string
+        evidenceNote:
+          description: Why the validator qualifies for classId; required when classId is set.
+          type: string
+        id:
+          description: Project ID.
+          format: uuid
+          type: string
+      required:
+      - id
+      type: object
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
+    ValidatorClassGrantResource:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ValidatorClassGrantResource.json
+          format: uri
+          readOnly: true
+          type: string
+        classId:
+          description: Granted class ID.
+          type: string
+        evidenceNote:
+          description: Recorded qualification justification.
+          type: string
+        id:
+          description: Class-grant ID.
+          type: string
+        userId:
+          description: Validator (user) ID.
+          type: string
+      required:
+      - id
+      - userId
+      - classId
+      - evidenceNote
+      type: object
+    ListValidatorProjectsOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListValidatorProjectsOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: The validator's non-revoked project assignments in the API key's organization.
+          items:
+            $ref: '#/components/schemas/ValidatorAssignmentResource'
+          type:
+          - array
+          - 'null'
+      required:
+      - data
+      type: object
+    ProjectInviteResource:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ProjectInviteResource.json
+          format: uri
+          readOnly: true
+          type: string
+        activeClassIds:
+          description: Class ids pre-staged on the invite (fulfilled at login acceptance); empty when none.
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+        assignedAt:
+          description: RFC3339 time the invite was fulfilled (login acceptance); null when pending or cancelled.
+          type:
+          - string
+          - 'null'
+        cancelledAt:
+          description: RFC3339 time the invite was soft-cancelled; null when pending or accepted.
+          type:
+          - string
+          - 'null'
+        createdAt:
+          description: RFC3339 time the invite was created.
+          type: string
+        email:
+          description: Invited email address.
+          type: string
+        emailSentAt:
+          description: RFC3339 time the invite email was last sent; null when not yet sent.
+          type:
+          - string
+          - 'null'
+        id:
+          description: Invite ID.
+          type: string
+        invitedByEmail:
+          description: Email of the originator who created the invite; empty for admin-created invites.
+          type: string
+        projectId:
+          description: Project the invite is for.
+          type: string
+        status:
+          description: 'Invite status: "pending", "accepted", or "cancelled".'
+          type: string
+      required:
+      - id
+      - email
+      - projectId
+      - status
+      - assignedAt
+      - cancelledAt
+      - invitedByEmail
+      - emailSentAt
+      - createdAt
+      - activeClassIds
+      type: object
+    AssignValidatorOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/AssignValidatorOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        alreadyAssigned:
+          description: Number of projects the validator was already assigned to.
+          format: int64
+          type: integer
+        assigned:
+          description: Number of projects the validator was newly assigned to.
+          format: int64
+          type: integer
+        classesGranted:
+          description: Number of class grants applied across the assigned projects.
+          format: int64
+          type: integer
+      required:
+      - assigned
+      - alreadyAssigned
+      - classesGranted
+      type: object
+    GrantValidatorClassInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/GrantValidatorClassInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        classId:
+          description: Class ID declared in the project's spec (see GET /projects/{projectId}/classes).
+          minLength: 1
+          type: string
+        evidenceNote:
+          description: Why this validator qualifies for the class (recorded for audit).
+          minLength: 1
+          type: string
+      required:
+      - classId
+      - evidenceNote
+      type: object
+    ListProjectInvitesOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListProjectInvitesOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: The project's non-fulfilled invites (pending + cancelled), newest first.
+          items:
+            $ref: '#/components/schemas/ProjectInviteResource'
+          type:
+          - array
+          - 'null'
+        hasMore:
+          description: True when more invites are available after this page.
+          type: boolean
+        nextCursor:
+          description: Cursor to pass as ?cursor= for the next page; null on the last page.
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - hasMore
+      - nextCursor
+      type: object
+    UnassignValidatorInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/UnassignValidatorInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        projectIds:
+          description: IDs of projects in the API key's organization to unassign this validator from.
+          items:
+            type: string
+          minItems: 1
+          type:
+          - array
+          - 'null'
+      required:
+      - projectIds
+      type: object
+    ListValidatorsOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListValidatorsOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: The org validator roster (list mode); null in lookup mode.
+          items:
+            $ref: '#/components/schemas/ValidatorResource'
+          type:
+          - array
+          - 'null'
+        hasMore:
+          description: True when more validators are available after this page (list mode).
+          type: boolean
+        nextCursor:
+          description: Cursor to pass as ?cursor= for the next page (list mode); null on the last page or in lookup mode.
+          type:
+          - string
+          - 'null'
+        validator:
+          $ref: '#/components/schemas/ValidatorResource'
+          description: The single org validator matching email (lookup mode); null in list mode.
+      required:
+      - validator
+      - data
+      - hasMore
+      - nextCursor
+      type: object
+    ListProjectClassesOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListProjectClassesOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: Validator classes declared in the project's spec.
+          items:
+            $ref: '#/components/schemas/ValidatorClassResource'
+          type:
+          - array
+          - 'null'
+      required:
+      - data
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: API key
+      description: 'Developer API key using the Authorization: Bearer poq_live_... header.'
+      scheme: bearer
+      type: http

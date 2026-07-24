@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  description: External developer API authenticated with API keys.
+  title: Sapien Developer Datapoints System API
+  version: 1.0.0
+servers:
+- url: /developer/v1
+security:
+- bearerAuth: []
+tags:
+- name: System
+paths:
+  /ping:
+    get:
+      description: Checks API key authentication and developer API availability.
+      operationId: ping
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Ping developer API
+      tags:
+      - System
+components:
+  schemas:
+    PingOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/PingOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        pong:
+          description: Always true when the API key is valid.
+          type: boolean
+      required:
+      - pong
+      type: object
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: API key
+      description: 'Developer API key using the Authorization: Bearer poq_live_... header.'
+      scheme: bearer
+      type: http

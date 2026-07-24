@@ -1,0 +1,371 @@
+openapi: 3.1.0
+info:
+  description: External developer API authenticated with API keys.
+  title: Sapien Developer Datapoints Projects API
+  version: 1.0.0
+servers:
+- url: /developer/v1
+security:
+- bearerAuth: []
+tags:
+- name: Projects
+paths:
+  /projects:
+    get:
+      description: 'List the projects in the API key''s organization, newest first. Cursor-paginated: pass the previous response''s nextCursor as ?cursor= to fetch the next page.'
+      operationId: listProjects
+      parameters:
+      - description: Maximum number of projects to return (1-100).
+        explode: false
+        in: query
+        name: limit
+        schema:
+          default: 20
+          description: Maximum number of projects to return (1-100).
+          format: int64
+          maximum: 100
+          minimum: 1
+          type: integer
+      - description: Opaque pagination cursor from a previous response's nextCursor. Omit for the first page.
+        explode: false
+        in: query
+        name: cursor
+        schema:
+          description: Opaque pagination cursor from a previous response's nextCursor. Omit for the first page.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProjectsOutputBody'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: List projects
+      tags:
+      - Projects
+    post:
+      description: Create an active project from a JSON spec. The project goes live immediately (spec locked), is attributed to the user who created the API key, and is created in that user's organization.
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectInputBody'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProjectOutputBody'
+          description: Created
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Create a project
+      tags:
+      - Projects
+  /projects/{projectId}:
+    get:
+      description: Fetch a single project in the API key's organization by ID.
+      operationId: getProject
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResource'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Get a project
+      tags:
+      - Projects
+    put:
+      description: 'Update a project''s editable fields. Only the supplied fields change: name and description are mutable metadata; paused toggles whether new validation claims are issued. The spec, status, and other fields are immutable once the project is live.'
+      operationId: updateProject
+      parameters:
+      - description: Project ID.
+        in: path
+        name: projectId
+        required: true
+        schema:
+          description: Project ID.
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectInputBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResource'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperStatusError'
+          description: Error
+      summary: Update a project
+      tags:
+      - Projects
+components:
+  schemas:
+    CreateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: Human-readable project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        spec:
+          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
+          type: object
+      required:
+      - name
+      - spec
+      type: object
+    ProjectResource:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ProjectResource.json
+          format: uri
+          readOnly: true
+          type: string
+        archived:
+          description: True when the project is archived (hidden from validators, no new claims).
+          type: boolean
+        archivedAt:
+          description: RFC3339 time the project was archived; null when not archived.
+          type:
+          - string
+          - 'null'
+        autoConsensus:
+          description: True when Auto Consensus test mode is enabled (synthetic validators auto-complete validations; testing only).
+          type: boolean
+        autoConsensusSpread:
+          description: 'Auto Consensus vote spread: "tight", "medium", or "wild".'
+          type: string
+        autoConsensusUsed:
+          description: True once synthetic (Auto Consensus) votes have ever been submitted for this project; sticky, so the project's outcomes are flagged as test-contaminated even after Auto Consensus is disabled.
+          type: boolean
+        createdAt:
+          description: RFC3339 creation time.
+          type: string
+        description:
+          description: Project description; null when unset.
+          type:
+          - string
+          - 'null'
+        id:
+          description: Project ID.
+          type: string
+        name:
+          description: Human-readable project name.
+          type: string
+        numValidators:
+          description: Validators required per datapoint.
+          format: int32
+          type: integer
+        paused:
+          description: True when new validation claims are paused.
+          type: boolean
+        pausedAt:
+          description: RFC3339 time the project was paused; null when not paused.
+          type:
+          - string
+          - 'null'
+        status:
+          description: Lifecycle status ("draft" or "active").
+          type: string
+        updatedAt:
+          description: RFC3339 last-update time.
+          type: string
+      required:
+      - id
+      - name
+      - description
+      - status
+      - paused
+      - pausedAt
+      - archived
+      - archivedAt
+      - autoConsensus
+      - autoConsensusSpread
+      - autoConsensusUsed
+      - numValidators
+      - createdAt
+      - updatedAt
+      type: object
+    ListProjectsOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListProjectsOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: Projects in the API key's organization, newest first.
+          items:
+            $ref: '#/components/schemas/ProjectResource'
+          type:
+          - array
+          - 'null'
+        hasMore:
+          description: True when more projects are available after this page.
+          type: boolean
+        nextCursor:
+          description: Cursor to pass as ?cursor= for the next page; null on the last page.
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - hasMore
+      - nextCursor
+      type: object
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+    UpdateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/UpdateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        archived:
+          description: Set true to archive the project (hidden from validators, no new claims), false to unarchive.
+          type: boolean
+        autoConsensus:
+          description: Set true to enable Auto Consensus test mode (synthetic validators auto-complete validations), false to disable.
+          type: boolean
+        autoConsensusSpread:
+          description: 'Auto Consensus vote spread: tight (unanimous), medium (realistic), or wild (contested, may escalate).'
+          enum:
+          - tight
+          - medium
+          - wild
+          type: string
+        description:
+          description: New project description; pass an empty string to clear it.
+          maxLength: 2000
+          type: string
+        name:
+          description: New project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        paused:
+          description: Set true to pause new validation claims, false to resume.
+          type: boolean
+      type: object
+    CreateProjectOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        projectId:
+          description: ID of the newly created project.
+          type: string
+        specId:
+          description: ID of the project's first compiled spec.
+          type: string
+        specVersion:
+          description: Spec version parsed from the submitted spec.
+          type: string
+        status:
+          description: Lifecycle status of the new project (always "active").
+          type: string
+      required:
+      - projectId
+      - specId
+      - specVersion
+      - status
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: API key
+      description: 'Developer API key using the Authorization: Bearer poq_live_... header.'
+      scheme: bearer
+      type: http
