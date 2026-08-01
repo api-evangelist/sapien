@@ -1,0 +1,21 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Sapien Proof of Quality Developer API
+  version: 1.0.0
+extends: openapi/sapien-poq-openapi-original.json
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-21'
+      x-apievangelist-provider: sapien
+      x-apievangelist-conventions: conventions/sapien-conventions.yml
+      x-apievangelist-errors: errors/sapien-problem-types.yml
+      x-apievangelist-authentication: authentication/sapien-authentication.yml
+      x-apievangelist-mcp: mcp/sapien-mcp.yml
+  - target: $.servers
+    update:
+      - url: https://sapien-poq.up.railway.app/developer/v1
+        description: Production Developer API (absolute base URL; spec ships a relative /developer/v1 server)
+  - target: $.info
+    update:
+      x-agentic-access: agentic-access/sapien-agentic-access.yml

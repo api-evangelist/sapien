@@ -1,0 +1,29 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/sapien-poq-openapi-original.json
+standards:
+  - id: openapi-3.1
+    conforms: true
+    evidence: openapi/sapien-poq-openapi-original.json declares openapi 3.1.0
+  - id: http-bearer-auth
+    conforms: true
+    evidence: securityScheme bearerAuth (http/bearer, bearerFormat "API key")
+  - id: oauth2
+    conforms: false
+    evidence: no oauth2 securityScheme; API-key bearer only
+  - id: oidc
+    conforms: false
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      errors use a Stripe-shaped envelope (error{type,code,param,message}+requestId)
+      served as application/json, not application/problem+json
+  - id: keyset-pagination
+    conforms: true
+    evidence: GET /projects returns {data, hasMore, nextCursor}
+  - id: idempotency
+    conforms: true
+    evidence: mutation operations documented as idempotent (see conventions/sapien-conventions.yml)
+  - id: json-schema-2020-12
+    conforms: true
+    evidence: schemas expose $schema JSON Schema references (/developer/v1/*.json)

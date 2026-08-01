@@ -1,0 +1,40 @@
+generated: '2026-07-21'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.sapien.io
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep  4 03:47:05 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: docs.sapien.io
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Aug 28 21:46:21 2026 GMT
+  hsts: false
+- host: sapien-poq.up.railway.app
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  1 14:01:29 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+domains:
+- domain: sapien.io
+  dnssec: true
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: quarantine
+- domain: railway.app
+  dnssec: false
+  caa:
+  - 0 issuewild "certainly.com"
+  - 0 issuewild "comodoca.com"
+  - 0 issuewild "digicert.com; cansignhttpexchanges=yes"
+  - 0 issuewild "letsencrypt.org"
+  - 0 issuewild "pki.goog; cansignhttpexchanges=yes"
+  - 0 issuewild "ssl.com"
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

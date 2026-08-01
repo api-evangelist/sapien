@@ -1,0 +1,22 @@
+{
+  "provider": "sapien",
+  "sources": [
+    "sapien-datapoints-api-openapi.yml",
+    "sapien-projects-api-openapi.yml",
+    "sapien-system-api-openapi.yml",
+    "sapien-upload-sessions-api-openapi.yml",
+    "sapien-validators-api-openapi.yml"
+  ],
+  "outputs": [
+    "sapien-datapoints-api-openapi.yml",
+    "sapien-projects-api-openapi.yml",
+    "sapien-system-api-openapi.yml",
+    "sapien-upload-sessions-api-openapi.yml",
+    "sapien-validators-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

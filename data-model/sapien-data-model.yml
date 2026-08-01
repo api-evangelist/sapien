@@ -1,0 +1,93 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/sapien-poq-openapi-original.json
+docs: https://docs.sapien.io/integrate/developer-api
+note: >-
+  Entity graph derived from the Developer API resource schemas and path structure.
+  All resources are scoped to the API key's organization.
+entities:
+  - name: Project
+    schema: ProjectResource
+    id: projectId (uuid)
+    description: A PoQ project defined by a poq.toml spec; owns uploads, validators, invites, datapoints.
+  - name: Validator
+    schema: ValidatorResource
+    id: validatorId
+    description: An org member enrolled to review datapoints; looked up by email.
+  - name: ValidatorAssignment
+    schema: ValidatorAssignmentResource
+    description: A validator's assignment to a project.
+  - name: ValidatorClass
+    schema: ValidatorClassResource
+    id: classId
+    description: A validator tier declared in a project's spec.
+  - name: ValidatorClassGrant
+    schema: ValidatorClassGrantResource
+    description: A grant of a class to a validator on a project.
+  - name: ProjectInvite
+    schema: ProjectInviteResource
+    id: inviteId
+    description: A pending/cancelled/accepted invite for an email to join a project as a validator.
+  - name: UploadSession
+    schema: GetUploadSessionOutputBody
+    id: uploadId
+    description: A file-upload session with a declared manifest; processed into datapoints.
+  - name: DeclaredFile
+    schema: DeclaredFileResource
+    description: A file declared in an upload session (presigned upload URL).
+  - name: IngestRun
+    schema: IngestRunResource
+    description: Processing run that turns uploaded files into datapoints.
+  - name: Datapoint
+    id: datapointId
+    description: A review item produced by ingestion; carries a consensus outcome.
+  - name: DatapointConsensus
+    schema: DatapointConsensusResource
+    description: The terminal consensus outcome for a datapoint.
+  - name: ProofReport
+    description: Signed PoQ Report (attestation/v1) issued for a project.
+relationships:
+  - from: Project
+    to: UploadSession
+    type: has_many
+    via: projectId
+  - from: UploadSession
+    to: DeclaredFile
+    type: has_many
+    via: uploadId
+  - from: UploadSession
+    to: IngestRun
+    type: has_one
+    via: uploadId
+  - from: Project
+    to: Datapoint
+    type: has_many
+    via: ingestion
+  - from: Datapoint
+    to: DatapointConsensus
+    type: has_one
+    via: datapointId
+  - from: Project
+    to: ValidatorClass
+    type: has_many
+    via: spec
+  - from: Project
+    to: ValidatorAssignment
+    type: has_many
+    via: projectId
+  - from: Validator
+    to: ValidatorAssignment
+    type: has_many
+    via: validatorId
+  - from: ValidatorAssignment
+    to: ValidatorClassGrant
+    type: has_many
+    via: classId
+  - from: Project
+    to: ProjectInvite
+    type: has_many
+    via: projectId
+  - from: Project
+    to: ProofReport
+    type: has_one
+    via: projectId

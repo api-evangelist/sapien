@@ -1,0 +1,21 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.sapien.io/integrate/developer-api
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /developer/v1
+  docs: https://docs.sapien.io/integrate/developer-api
+maturity:
+  stage: alpha
+  note: >-
+    Platform is in alpha/testnet with waitlist access; the Developer API and MCP
+    server are live at sapien-poq.up.railway.app.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No deprecation policy or RFC 8594 Sunset/Deprecation header support documented at capture time.
+sla:
+  url: null
+status_page: null
+deprecated_operations: []

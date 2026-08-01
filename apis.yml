@@ -1,22 +1,174 @@
 aid: sapien
 name: Sapien
-description: Sapien is a company surfaced as a portfolio company of general-catalyst and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Sapien is the company behind Proof of Quality (PoQ), an open protocol and consensus/attestation
+  system for verifiable quality signals on AI data and subjective expert outputs. A panel of
+  independent, collateral-backed validators reviews each item against a customer-defined rubric
+  (a poq.toml spec), consensus collapses their scores into one rating per datapoint, and the result
+  is sealed as a permanent onchain attestation (a PoQ Report) — while the underlying data never
+  leaves the customer's systems. Use cases span training-data labeling, fine-tuning and evaluation
+  gates, audit/compliance review, and production safety verification. Sapien ships a live Developer
+  API (/developer/v1) and an MCP server, both authenticated with poq_live_ API keys, and runs on
+  Base Mainnet with a $SAPIEN staking/slashing token. Backed by General Catalyst.
 url: https://raw.githubusercontent.com/api-evangelist/sapien/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://docs.sapien.io/favicon.jpg
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - general-catalyst
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: active
+x-tier-reason: enriched-has-api
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- AI
+- Data Quality
+- Data Labeling
+- Machine Learning
+- Human in the Loop
+- Attestation
+- Blockchain
+- Consensus
+- MCP
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: sapien:sapien-datapoints-api
+  name: Sapien Datapoints API
+  description: The Datapoints API from Sapien — 1 operation(s) for datapoints.
+  humanURL: https://docs.sapien.io/integrate/developer-api
+  baseURL: https://sapien-poq.up.railway.app/developer/v1
+  tags:
+  - Datapoints
+  properties:
+  - type: OpenAPI
+    url: openapi/sapien-datapoints-api-openapi.yml
+  - type: APIReference
+    url: https://sapien-poq.up.railway.app/developer/v1/docs
+  - type: Documentation
+    url: https://docs.sapien.io/integrate/developer-api
+- aid: sapien:sapien-projects-api
+  name: Sapien Projects API
+  description: The Projects API from Sapien — 2 operation(s) for projects.
+  humanURL: https://docs.sapien.io/integrate/developer-api
+  baseURL: https://sapien-poq.up.railway.app/developer/v1
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/sapien-projects-api-openapi.yml
+  - type: APIReference
+    url: https://sapien-poq.up.railway.app/developer/v1/docs
+  - type: Documentation
+    url: https://docs.sapien.io/integrate/developer-api
+- aid: sapien:sapien-system-api
+  name: Sapien System API
+  description: The System API from Sapien — 1 operation(s) for system.
+  humanURL: https://docs.sapien.io/integrate/developer-api
+  baseURL: https://sapien-poq.up.railway.app/developer/v1
+  tags:
+  - System
+  properties:
+  - type: OpenAPI
+    url: openapi/sapien-system-api-openapi.yml
+  - type: APIReference
+    url: https://sapien-poq.up.railway.app/developer/v1/docs
+  - type: Documentation
+    url: https://docs.sapien.io/integrate/developer-api
+- aid: sapien:sapien-upload-sessions-api
+  name: Sapien Upload Sessions API
+  description: The Upload Sessions API from Sapien — 6 operation(s) for upload sessions.
+  humanURL: https://docs.sapien.io/integrate/developer-api
+  baseURL: https://sapien-poq.up.railway.app/developer/v1
+  tags:
+  - Upload Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/sapien-upload-sessions-api-openapi.yml
+  - type: APIReference
+    url: https://sapien-poq.up.railway.app/developer/v1/docs
+  - type: Documentation
+    url: https://docs.sapien.io/integrate/developer-api
+- aid: sapien:sapien-validators-api
+  name: Sapien Validators API
+  description: The Validators API from Sapien — 9 operation(s) for validators.
+  humanURL: https://docs.sapien.io/integrate/developer-api
+  baseURL: https://sapien-poq.up.railway.app/developer/v1
+  tags:
+  - Validators
+  properties:
+  - type: OpenAPI
+    url: openapi/sapien-validators-api-openapi.yml
+  - type: APIReference
+    url: https://sapien-poq.up.railway.app/developer/v1/docs
+  - type: Documentation
+    url: https://docs.sapien.io/integrate/developer-api
+common:
+- type: DomainSecurity
+  url: security/sapien-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/sapien-agentic-access.yml
+- type: Authentication
+  url: authentication/sapien-authentication.yml
+- type: MCPServer
+  url: mcp/sapien-mcp.yml
+- type: LLMsTxt
+  url: llms/sapien-llms.txt
+- type: Conventions
+  url: conventions/sapien-conventions.yml
+- type: Idempotency
+  url: conventions/sapien-conventions.yml
+- type: ErrorCatalog
+  url: errors/sapien-problem-types.yml
+- type: Conformance
+  url: conformance/sapien-conformance.yml
+- type: Lifecycle
+  url: lifecycle/sapien-lifecycle.yml
+- type: DataModel
+  url: data-model/sapien-data-model.yml
+- type: Overlay
+  url: overlays/sapien-poq-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: DeveloperPortal
+  url: https://www.sapien.io/developers
+- type: Documentation
+  url: https://docs.sapien.io/
+- type: GettingStarted
+  url: https://docs.sapien.io/start/quickstart
+- type: GitHubOrganization
+  url: https://github.com/sapien-io
+- type: Blog
+  url: https://www.sapien.io/blog
+- type: Roadmap
+  url: https://www.sapien.io/roadmap
+- type: SignUp
+  url: https://www.sapien.io/developers
+- type: TermsOfService
+  url: https://www.sapien.io/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.sapien.io/privacy-policy
+- type: Website
+  url: https://www.sapien.io
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 13
+  pass: local-v1

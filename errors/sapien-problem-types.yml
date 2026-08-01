@@ -1,0 +1,53 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/sapien-poq-openapi-original.json
+docs: https://docs.sapien.io/integrate/developer-api
+format: stripe-shaped        # NOT rfc9457; application/json, not application/problem+json
+envelope:
+  schema: openapi/sapien-poq-openapi-original.json#/components/schemas/DeveloperStatusError
+  fields:
+    error: { type: string, code: string, param: string, message: string }
+    requestId: string
+problems:
+  - status: 401
+    code: api_key_missing
+    title: API key missing
+    remediation: Provide an Authorization Bearer token with your poq_live_ key.
+  - status: 401
+    code: api_key_invalid
+    title: API key invalid or expired
+    remediation: Verify the key or create a new one in the app.
+  - status: 403
+    code: not_org_originator
+    title: Caller is not an organization originator
+    remediation: Project and upload endpoints require the key creator to be an org originator.
+  - status: 400
+    code: project_spec_invalid
+    title: Project spec (poq.toml) invalid
+  - status: 404
+    code: project_not_found
+    title: Project not found
+  - status: 404
+    code: datapoint_not_found
+    title: Datapoint not found
+  - status: 404
+    code: validator_not_found
+    title: Validator not found
+  - status: 404
+    code: invite_not_found
+    title: Invite not found (already cancelled / left the pending list)
+  - status: 409
+    code: invite_already_accepted
+    title: Invite already accepted
+  - status: 404
+    code: upload_session_not_found
+    title: Upload session not found
+  - status: 409
+    code: upload_files_missing
+    title: Upload files missing
+  - status: 409
+    code: consensus_not_finalized
+    title: Consensus not finalized for datapoint
+  - status: 404
+    code: proof_report_not_ready
+    title: Proof report not ready

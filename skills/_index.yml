@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/sapien-poq-openapi-original.json
+skills:
+  - file: sapien-create-project-and-upload.md
+    name: Create a PoQ project and upload data
+    api: openapi/sapien-poq-openapi-original.json
+    operations: [ping, createProject, createUploadSession, declareUploadFiles, processUploadSession, getUploadSessionStatus]
+  - file: sapien-assign-validators.md
+    name: Invite and assign validators to a project
+    api: openapi/sapien-poq-openapi-original.json
+    operations: [listValidators, createProjectInvite, assignValidator, listProjectClasses, grantValidatorClass, unassignValidator]
+  - file: sapien-retrieve-consensus-and-report.md
+    name: Retrieve consensus outcomes and issue a PoQ Report
+    api: openapi/sapien-poq-openapi-original.json
+    operations: [getProject, getDatapointConsensus]

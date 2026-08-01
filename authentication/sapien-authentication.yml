@@ -1,0 +1,20 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/sapien-poq-openapi-original.json
+docs: https://docs.sapien.io/integrate/api-keys
+summary:
+  types:
+  - http
+  api_key_format: poq_live_ + 32 base62 chars (41 chars total)
+  key_management: https://sapien-poq.up.railway.app/originator/api-keys
+  note: >-
+    Token is shown exactly once at creation and cannot be retrieved later. Project and
+    upload endpoints additionally require the key creator to be an org originator.
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: API key
+  description: 'Developer API key using the Authorization: Bearer poq_live_... header.'
+  sources:
+  - openapi/sapien-poq-openapi-original.json

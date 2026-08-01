@@ -1,0 +1,63 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.sapien.io/integrate/developer-api
+api: openapi/sapien-poq-openapi-original.json
+authentication:
+  style: bearer
+  header: 'Authorization: Bearer poq_live_...'
+  key_format: poq_live_ + 32 base62 chars (41 chars total)
+  note: >-
+    Project and upload endpoints require the key creator to be an organization
+    originator (not_org_originator 403 otherwise).
+  see: authentication/sapien-authentication.yml
+serialization:
+  case: camelCase
+  note: JSON bodies and responses use camelCase keys.
+  content_type: application/json
+idempotency:
+  supported: true
+  style: operation-level        # no client-supplied Idempotency-Key header
+  header: null
+  details:
+    - createProjectInvite is an idempotent upsert keyed by (lower(email), project_id);
+      a pending invite is returned unchanged, a cancelled one is reactivated.
+    - cancelProjectInvite is idempotent on a pending invite.
+    - revokeValidatorClass is idempotent (revoking a class not held is a no-op).
+    - unassignValidator is idempotent (unassigning a project not assigned is a no-op).
+  note: >-
+    Idempotency is a documented property of Sapien's mutation semantics rather than a
+    replayable idempotency-key contract.
+pagination:
+  style: keyset (cursor)
+  applies_to: GET /projects
+  params:
+    limit: 1-100 (default 20)
+    cursor: nextCursor from the previous page
+  response_fields: [data, hasMore, nextCursor]
+  order: newest first
+error_envelope:
+  shape: stripe-shaped
+  schema: openapi/sapien-poq-openapi-original.json#/components/schemas/DeveloperStatusError
+  fields:
+    error: { type: string, code: string, param: string, message: string }
+    requestId: string
+  content_type: application/json    # NOT application/problem+json (see conformance)
+  see: errors/sapien-problem-types.yml
+request_tracing:
+  field: requestId
+  note: The requestId is returned on error envelopes for support/tracing.
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /developer/v1
+  see: lifecycle/sapien-lifecycle.yml
+uploads:
+  model: presigned URLs (declare files, then PUT bytes to presigned S3-style URLs)
+  limits:
+    max_file_size: 5 GiB per file
+    max_files_per_declare: 1000
+    path_rules: relative paths only (no leading /, no ..)
+    presigned_url_ttl: 1 hour
+rate_limits:
+  documented: false
+  note: No rate-limit signaling documented at time of capture.
