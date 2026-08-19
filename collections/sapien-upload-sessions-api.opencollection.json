@@ -1,0 +1,192 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sapien Developer Datapoints Upload Sessions API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Upload Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an upload session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/projects/:projectId/upload-sessions",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Open an upload session for a project and receive one presigned PUT URL per declared file. Upload each file's bytes directly to its uploadUrl with an HTTP PUT — do not send file bytes to this API. URLs expire after one hour; request fresh ones with the declare-files endpoint. The session stays open until an ingest run is started against it."
+        },
+        {
+          "info": {
+            "name": "Get an upload session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/projects/:projectId/upload-sessions/:uploadId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "uploadId",
+                "value": "",
+                "type": "path",
+                "description": "Upload session ID."
+              }
+            ]
+          },
+          "docs": "Fetch one upload session: its lifecycle status, the full list of declared files, and the verification counters recorded by the most recent process call."
+        },
+        {
+          "info": {
+            "name": "One-shot file upload (307 redirect)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/developer/v1/projects/:projectId/upload-sessions/:uploadId/file",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "uploadId",
+                "value": "",
+                "type": "path",
+                "description": "Upload session ID."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "File path relative to the session folder (e.g. \"data/rows.csv\")."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "File size in bytes (max 5 GiB). Optional: defaults to the request's Content-Length, which clients like curl set automatically. Required only when the request is sent chunked (no Content-Length header)."
+              }
+            ]
+          },
+          "docs": "Convenience variant of declare-files for single files: PUT the file body to this endpoint with ?path= and it responds 307 Temporary Redirect to the file's presigned URL before reading the body. The file size is taken from the request's Content-Length header automatically; pass ?size= only for chunked/streamed requests that carry no Content-Length. Requires an HTTP client that follows 307 redirects with method and body preserved and that strips the Authorization header on redirect (curl does: `cu"
+        },
+        {
+          "info": {
+            "name": "Declare files / refresh upload URLs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/projects/:projectId/upload-sessions/:uploadId/files",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "uploadId",
+                "value": "",
+                "type": "path",
+                "description": "Upload session ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Declare additional files on an open upload session, or get fresh presigned PUT URLs for files already declared (re-declaring a path updates its declared size and returns a new URL). The session's file list is merged, never replaced."
+        },
+        {
+          "info": {
+            "name": "Process an upload session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/projects/:projectId/upload-sessions/:uploadId/process",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "uploadId",
+                "value": "",
+                "type": "path",
+                "description": "Upload session ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Verify the uploads and start the asynchronous ingest run in one call. Every declared file must already be uploaded (and within its declared size) or the call fails with the missing paths listed. Responds 202 with a runId; poll the status endpoint to follow the run. A failed session can be processed again to retry."
+        },
+        {
+          "info": {
+            "name": "Get processing status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/projects/:projectId/upload-sessions/:uploadId/status",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "uploadId",
+                "value": "",
+                "type": "path",
+                "description": "Upload session ID."
+              }
+            ]
+          },
+          "docs": "Poll the session's lifecycle state and its most recent ingest run: live progress counters while running, final counts when complete, and the error message when failed."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

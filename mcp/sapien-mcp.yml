@@ -4,85 +4,81 @@ status: published
 source: https://docs.sapien.io/integrate/mcp
 server:
   name: sapien-poq
-  transport: http            # streamable HTTP MCP
+  transport: http
   url: https://sapien-poq.up.railway.app/mcp
   authentication:
     scheme: bearer
     header: 'Authorization: Bearer poq_live_...'
     note: Uses the same Developer API keys as the /developer/v1 REST surface.
   characteristics:
-    - Stateless across requests
-    - Field names and error vocabulary match the /developer/v1 REST API
-    - Presigned URLs handle file uploads (no bytes through tool calls)
-    - Error codes use camelCase formatting
+  - Stateless across requests
+  - Field names and error vocabulary match the /developer/v1 REST API
+  - Presigned URLs handle file uploads (no bytes through tool calls)
+  - Error codes use camelCase formatting
 client_example:
-  cursor_mcp_json: |
-    {
-      "mcpServers": {
-        "sapien-poq": {
-          "type": "http",
-          "url": "https://sapien-poq.up.railway.app/mcp",
-          "headers": { "Authorization": "Bearer poq_live_..." }
-        }
-      }
-    }
+  cursor_mcp_json: "{\n  \"mcpServers\": {\n    \"sapien-poq\": {\n      \"type\": \"http\",\n      \"\
+    url\": \"https://sapien-poq.up.railway.app/mcp\",\n      \"headers\": { \"Authorization\": \"Bearer\
+    \ poq_live_...\" }\n    }\n  }\n}\n"
   note: Other clients (Claude Code, VS Code) follow the same URL and header pattern.
 tools:
-  # Project & upload management
-  - name: ping
-    source_operation: openapi/sapien-poq-openapi-original.json#ping
-  - name: create_project
-    source_operation: openapi/sapien-poq-openapi-original.json#createProject
-  - name: list_projects
-    source_operation: openapi/sapien-poq-openapi-original.json#listProjects
-  - name: get_project
-    source_operation: openapi/sapien-poq-openapi-original.json#getProject
-  - name: update_project
-    source_operation: openapi/sapien-poq-openapi-original.json#updateProject
-  - name: create_upload_session
-    source_operation: openapi/sapien-poq-openapi-original.json#createUploadSession
-  - name: declare_upload_files
-    source_operation: openapi/sapien-poq-openapi-original.json#declareUploadFiles
-  - name: get_upload_session
-    source_operation: openapi/sapien-poq-openapi-original.json#getUploadSession
-  - name: process_upload_session
-    source_operation: openapi/sapien-poq-openapi-original.json#processUploadSession
-  - name: get_upload_session_status
-    source_operation: openapi/sapien-poq-openapi-original.json#getUploadSessionStatus
-  # Validator & access control
-  - name: list_validators
-    source_operation: openapi/sapien-poq-openapi-original.json#listValidators
-  - name: lookup_validator
-    source_operation: openapi/sapien-poq-openapi-original.json#listValidators
-  - name: list_validator_projects
-    source_operation: openapi/sapien-poq-openapi-original.json#listValidatorProjects
-  - name: assign_validator
-    source_operation: openapi/sapien-poq-openapi-original.json#assignValidator
-  - name: unassign_validator
-    source_operation: openapi/sapien-poq-openapi-original.json#unassignValidator
-  - name: list_project_classes
-    source_operation: openapi/sapien-poq-openapi-original.json#listProjectClasses
-  - name: grant_validator_class
-    source_operation: openapi/sapien-poq-openapi-original.json#grantValidatorClass
-  - name: revoke_validator_class
-    source_operation: openapi/sapien-poq-openapi-original.json#revokeValidatorClass
-  - name: invite_validator
-    source_operation: openapi/sapien-poq-openapi-original.json#createProjectInvite
-  - name: list_project_invites
-    source_operation: openapi/sapien-poq-openapi-original.json#listProjectInvites
-  - name: cancel_project_invite
-    source_operation: openapi/sapien-poq-openapi-original.json#cancelProjectInvite
-  # Results
-  - name: get_datapoint_consensus
-    source_operation: openapi/sapien-poq-openapi-original.json#getDatapointConsensus
-  - name: get_proof_report
-    source_operation: openapi/sapien-poq-openapi-original.json#getProject
-  # Guidance tools (MCP-only, no REST equivalent)
-  - name: get_started
-    description: Guidance tool for getting started with PoQ.
-  - name: spec_authoring_guide
-    description: Guidance tool for authoring a poq.toml spec.
-  - name: project_creation_instruction
-    description: Guidance tool for creating a project.
-  - name: wait_for_upload_session
-    description: Guidance/polling helper for upload session completion.
+- name: ping
+  source_operation: openapi/sapien-poq-openapi-original.json#ping
+- name: create_project
+  source_operation: openapi/sapien-poq-openapi-original.json#createProject
+- name: list_projects
+  source_operation: openapi/sapien-poq-openapi-original.json#listProjects
+- name: get_project
+  source_operation: openapi/sapien-poq-openapi-original.json#getProject
+- name: update_project
+  source_operation: openapi/sapien-poq-openapi-original.json#updateProject
+- name: create_upload_session
+  source_operation: openapi/sapien-poq-openapi-original.json#createUploadSession
+- name: declare_upload_files
+  source_operation: openapi/sapien-poq-openapi-original.json#declareUploadFiles
+- name: get_upload_session
+  source_operation: openapi/sapien-poq-openapi-original.json#getUploadSession
+- name: process_upload_session
+  source_operation: openapi/sapien-poq-openapi-original.json#processUploadSession
+- name: get_upload_session_status
+  source_operation: openapi/sapien-poq-openapi-original.json#getUploadSessionStatus
+- name: list_validators
+  source_operation: openapi/sapien-poq-openapi-original.json#listValidators
+- name: lookup_validator
+  source_operation: openapi/sapien-poq-openapi-original.json#listValidators
+- name: list_validator_projects
+  source_operation: openapi/sapien-poq-openapi-original.json#listValidatorProjects
+- name: assign_validator
+  source_operation: openapi/sapien-poq-openapi-original.json#assignValidator
+- name: unassign_validator
+  source_operation: openapi/sapien-poq-openapi-original.json#unassignValidator
+- name: list_project_classes
+  source_operation: openapi/sapien-poq-openapi-original.json#listProjectClasses
+- name: grant_validator_class
+  source_operation: openapi/sapien-poq-openapi-original.json#grantValidatorClass
+- name: revoke_validator_class
+  source_operation: openapi/sapien-poq-openapi-original.json#revokeValidatorClass
+- name: invite_validator
+  source_operation: openapi/sapien-poq-openapi-original.json#createProjectInvite
+- name: list_project_invites
+  source_operation: openapi/sapien-poq-openapi-original.json#listProjectInvites
+- name: cancel_project_invite
+  source_operation: openapi/sapien-poq-openapi-original.json#cancelProjectInvite
+- name: get_datapoint_consensus
+  source_operation: openapi/sapien-poq-openapi-original.json#getDatapointConsensus
+- name: get_proof_report
+  source_operation: openapi/sapien-poq-openapi-original.json#getProject
+- name: get_started
+  description: Guidance tool for getting started with PoQ.
+- name: spec_authoring_guide
+  description: Guidance tool for authoring a poq.toml spec.
+- name: project_creation_instruction
+  description: Guidance tool for creating a project.
+- name: wait_for_upload_session
+  description: Guidance/polling helper for upload session completion.
+deployment:
+  mode: remote
+  endpoint: https://sapien-poq.up.railway.app/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census

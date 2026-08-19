@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sapien Developer Datapoints API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Datapoints",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get datapoint consensus",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/datapoints/:datapointId/consensus",
+            "params": [
+              {
+                "name": "datapointId",
+                "value": "",
+                "type": "path",
+                "description": "Datapoint ID."
+              }
+            ]
+          },
+          "docs": "Fetch the terminal consensus outcome for a datapoint in the API key's organization: the headline quality rating and consensus strength, plus the consensusDecisionId. Resolves a datapoint.consensus_reached webhook back to its outcome. Returns 409 consensus_not_finalized when the datapoint exists but has not reached terminal consensus yet, and 404 datapoint_not_found when there is no such datapoint in the organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

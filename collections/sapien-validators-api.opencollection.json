@@ -1,0 +1,278 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sapien Developer Datapoints Validators API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Validators",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List a project's validator classes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/projects/:projectId/classes",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ]
+          },
+          "docs": "List the validator classes declared in a project's spec ([validators].classes). These class ids are what you grant to a validator (standalone, or via the assign endpoint)."
+        },
+        {
+          "info": {
+            "name": "List a project's invites",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/projects/:projectId/invites",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of invites to return (1-100)."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from a previous response's nextCursor. Omit for the first page."
+              }
+            ]
+          },
+          "docs": "List the project's non-fulfilled invites (pending + cancelled), cursor-paginated, newest first. Accepted invitees are project validators and are visible via GET /validators, not this endpoint. Each row carries a status field (\"pending\" or \"cancelled\")."
+        },
+        {
+          "info": {
+            "name": "Invite a validator by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/projects/:projectId/invites",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a pending invite for an email to join a project as a validator. Idempotent upsert keyed by (lower(email), project_id): a pending invite is returned unchanged, a cancelled one is reactivated, an already-accepted one is returned with status \"accepted\" and no email is sent. Optional classId + evidenceNote pre-stage a class grant on the invite (fulfilled at login acceptance); the class must be declared in the project's spec. The invite email is sent via the ProjectInvite template unless sendE"
+        },
+        {
+          "info": {
+            "name": "Cancel a pending invite",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/developer/v1/projects/:projectId/invites/:inviteId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "inviteId",
+                "value": "",
+                "type": "path",
+                "description": "Invite ID."
+              }
+            ]
+          },
+          "docs": "Soft-cancel a pending invite (stamps cancelled_at; the row is preserved for audit). Idempotent on a pending invite. An already-cancelled invite returns 404 invite_not_found (it has left the pending list); an already-accepted invite returns 409 invite_already_accepted (cancelling would erase the audit trail of an active project_validator membership); a cross-project invite returns 404 invite_not_found."
+        },
+        {
+          "info": {
+            "name": "Grant a validator a class on a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/projects/:projectId/validators/:validatorId/classes",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "validatorId",
+                "value": "",
+                "type": "path",
+                "description": "Validator (user) ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Grant a spec-declared class to a validator on a project. Exclusive: any other active class the validator holds on the project is revoked first. The class must be declared in the project's spec."
+        },
+        {
+          "info": {
+            "name": "Revoke a validator's class on a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/developer/v1/projects/:projectId/validators/:validatorId/classes/:classId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "Project ID."
+              },
+              {
+                "name": "validatorId",
+                "value": "",
+                "type": "path",
+                "description": "Validator (user) ID."
+              },
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "Class ID to revoke."
+              }
+            ]
+          },
+          "docs": "Soft-revoke a validator's class grant on a project. Idempotent: revoking a class the validator does not hold is a no-op."
+        },
+        {
+          "info": {
+            "name": "List or look up validators",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/validators",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "Optional email to look up a single org validator (case-insensitive). When set, limit/cursor are ignored."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of validators to return (1-100); list mode only."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from a previous response's nextCursor; list mode only."
+              }
+            ]
+          },
+          "docs": "With ?email= set, looks up the single org validator matching that email (case-insensitive). Without ?email=, lists the org validator roster (org is_validator members union project-assigned validators), cursor-paginated, newest joined_at first. A lookup that matches no user, or a user who is neither an org validator nor assigned to a project in the org, returns 404 validator_not_found — the API never leaks whether a user exists outside your organization."
+        },
+        {
+          "info": {
+            "name": "Assign a validator to projects",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/validators/:validatorId/assign",
+            "params": [
+              {
+                "name": "validatorId",
+                "value": "",
+                "type": "path",
+                "description": "Validator (user) ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign a validator to one or more projects in the API key's organization. The validator must already be a validator of the organization unless autoEnroll is set (which promotes an existing org member to validator first). Every project must belong to the organization. Applied as an all-or-nothing batch."
+        },
+        {
+          "info": {
+            "name": "List a validator's project assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/validators/:validatorId/projects",
+            "params": [
+              {
+                "name": "validatorId",
+                "value": "",
+                "type": "path",
+                "description": "Validator (user) ID."
+              }
+            ]
+          },
+          "docs": "List the projects a validator is currently assigned to within the API key's organization. Returns an empty list for an unknown validator or one with no assignments."
+        },
+        {
+          "info": {
+            "name": "Unassign a validator from projects",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/developer/v1/validators/:validatorId/unassign",
+            "params": [
+              {
+                "name": "validatorId",
+                "value": "",
+                "type": "path",
+                "description": "Validator (user) ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Revoke a validator's assignment to one or more projects in the API key's organization. Idempotent: unassigning a project the validator is not assigned to is a no-op. Class grants are separate — revoke them via DELETE /projects/{projectId}/validators/{validatorId}/classes/{classId}."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

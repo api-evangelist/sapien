@@ -1,0 +1,1815 @@
+{
+  "item": [
+    {
+      "id": "d7357837-9e63-49eb-88a8-366e0bc5005d",
+      "name": "Validators",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c1fc56d0-3f1a-44f2-9a8c-01d6e38e7f91",
+          "name": "List a project's validator classes",
+          "request": {
+            "name": "List a project's validator classes",
+            "description": {
+              "content": "List the validator classes declared in a project's spec ([validators].classes). These class ids are what you grant to a validator (standalone, or via the assign endpoint).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":projectId",
+                "classes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "projectId",
+                  "description": "(Required) Project ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "46674bca-3e41-4cce-9a25-e30a43dc73a0",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "classes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"type\": \"string\",\n      \"rewardCents\": 525,\n      \"stakeWei\": \"string\",\n      \"consensusWeight\": 8113.598934949521,\n      \"model\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"type\": \"string\",\n      \"rewardCents\": 6461,\n      \"stakeWei\": \"string\",\n      \"consensusWeight\": 5813.832971407446,\n      \"model\": \"string\"\n    }\n  ],\n  \"$schema\": \"http://ldzlgLdALrkKJMONYSLQbbkHJUuk.yyttEGycHpvo5JK65HvGFnR,xr8DxSIz\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bbd066cb-abb3-402e-a3f7-1f7ecee84a1c",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "classes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "840a4404-cc9b-463c-80d4-a70e0f33c468",
+          "name": "List a project's invites",
+          "request": {
+            "name": "List a project's invites",
+            "description": {
+              "content": "List the project's non-fulfilled invites (pending + cancelled), cursor-paginated, newest first. Accepted invitees are project validators and are visible via GET /validators, not this endpoint. Each row carries a status field (\"pending\" or \"cancelled\").",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":projectId",
+                "invites"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Maximum number of invites to return (1-100)."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from a previous response's nextCursor. Omit for the first page."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "projectId",
+                  "description": "(Required) Project ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8dc5a5f6-e15d-4381-9e09-b83f331ad673",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "invites"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"email\": \"string\",\n      \"projectId\": \"string\",\n      \"status\": \"string\",\n      \"assignedAt\": \"string\",\n      \"cancelledAt\": \"string\",\n      \"invitedByEmail\": \"string\",\n      \"emailSentAt\": \"string\",\n      \"createdAt\": \"string\",\n      \"activeClassIds\": [\n        \"string\",\n        \"string\"\n      ],\n      \"$schema\": \"https://eRduSZeIjeyLJoyiKDSXivUezfnykv.zyjcLaNYDFj.XSwF5tB+-GDCt9QKj6oK0.D2CA18sMeSr4S45ldir6\"\n    },\n    {\n      \"id\": \"string\",\n      \"email\": \"string\",\n      \"projectId\": \"string\",\n      \"status\": \"string\",\n      \"assignedAt\": \"string\",\n      \"cancelledAt\": \"string\",\n      \"invitedByEmail\": \"string\",\n      \"emailSentAt\": \"string\",\n      \"createdAt\": \"string\",\n      \"activeClassIds\": [\n        \"string\",\n        \"string\"\n      ],\n      \"$schema\": \"http://YhJEJQHYMSIn.mhozq.gZci,b,2NjQ5fY2OjWmi8HLRWw5Yk2GZ\"\n    }\n  ],\n  \"hasMore\": false,\n  \"nextCursor\": \"string\",\n  \"$schema\": \"http://XhBNVqlvgftFP.oblwVyoGmxxPbpiBTgzHDZNuXfZuM+JgvtF-bhFm91GwYeXrcAwkdhi\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6b93ab1-43b4-41ef-a4cb-9531b8229510",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "invites"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2a3a2d28-87ab-4499-ae32-6834c2f6efa7",
+          "name": "Invite a validator by email",
+          "request": {
+            "name": "Invite a validator by email",
+            "description": {
+              "content": "Create a pending invite for an email to join a project as a validator. Idempotent upsert keyed by (lower(email), project_id): a pending invite is returned unchanged, a cancelled one is reactivated, an already-accepted one is returned with status \"accepted\" and no email is sent. Optional classId + evidenceNote pre-stage a class grant on the invite (fulfilled at login acceptance); the class must be declared in the project's spec. The invite email is sent via the ProjectInvite template unless sendEmail is false.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":projectId",
+                "invites"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "projectId",
+                  "description": "(Required) Project ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<string>\",\n  \"classId\": \"<string>\",\n  \"evidenceNote\": \"<string>\",\n  \"sendEmail\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "64740869-8b3b-460e-a2e3-cb3f0b881825",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "invites"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<string>\",\n  \"classId\": \"<string>\",\n  \"evidenceNote\": \"<string>\",\n  \"sendEmail\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"projectId\": \"string\",\n  \"status\": \"string\",\n  \"assignedAt\": \"string\",\n  \"cancelledAt\": \"string\",\n  \"invitedByEmail\": \"string\",\n  \"emailSentAt\": \"string\",\n  \"createdAt\": \"string\",\n  \"activeClassIds\": [\n    \"string\",\n    \"string\"\n  ],\n  \"$schema\": \"https://YdkOiNUPNaIcnBPqFayEu.rrvvleLEvg2sTmpPa.ubaPJteMwP7Rr.axaQBkA7dAl+q67dJH+KQZMXjnI3E.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70d91a4c-546d-4f52-9380-f08ec55dd1ee",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "invites"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"<string>\",\n  \"classId\": \"<string>\",\n  \"evidenceNote\": \"<string>\",\n  \"sendEmail\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "724050ce-fd9d-4f80-b1a8-d0d1cd995588",
+          "name": "Cancel a pending invite",
+          "request": {
+            "name": "Cancel a pending invite",
+            "description": {
+              "content": "Soft-cancel a pending invite (stamps cancelled_at; the row is preserved for audit). Idempotent on a pending invite. An already-cancelled invite returns 404 invite_not_found (it has left the pending list); an already-accepted invite returns 409 invite_already_accepted (cancelling would erase the audit trail of an active project_validator membership); a cross-project invite returns 404 invite_not_found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":projectId",
+                "invites",
+                ":inviteId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "projectId",
+                  "description": "(Required) Project ID."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "inviteId",
+                  "description": "(Required) Invite ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "647f3e16-819c-457d-a369-0e2e746203e1",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "invites",
+                    ":inviteId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "inviteId",
+                      "description": "(Required) Invite ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"cancelled\": true,\n  \"$schema\": \"http://owNTaVyeaDTOgfmVSXjriKmWReyLniVw.yqEXrTR1H6qVHq5PCSPxRl0-C0,d0xtny.Lxa1KExamwZwgmW,BIOADJD8P\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "648b0650-cd38-4c1d-aa2b-08b039373054",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "invites",
+                    ":inviteId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "inviteId",
+                      "description": "(Required) Invite ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e9267821-96ef-4b2f-b500-5de4e7de1425",
+          "name": "Grant a validator a class on a project",
+          "request": {
+            "name": "Grant a validator a class on a project",
+            "description": {
+              "content": "Grant a spec-declared class to a validator on a project. Exclusive: any other active class the validator holds on the project is revoked first. The class must be declared in the project's spec.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":projectId",
+                "validators",
+                ":validatorId",
+                "classes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "projectId",
+                  "description": "(Required) Project ID."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "validatorId",
+                  "description": "(Required) Validator (user) ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"classId\": \"<string>\",\n  \"evidenceNote\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8af7246f-a9a2-44b7-97d4-795c17eb63d9",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "validators",
+                    ":validatorId",
+                    "classes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"classId\": \"<string>\",\n  \"evidenceNote\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"userId\": \"string\",\n  \"classId\": \"string\",\n  \"evidenceNote\": \"string\",\n  \"$schema\": \"http://LGcIBzRMzMUZzpgPWwqhhk.ysaMWGvkLE-to4uRp2arpILjaIJ9fXwc-RMBMpmoLr\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba7a20ee-6200-4213-9014-6c278f2cfe68",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "validators",
+                    ":validatorId",
+                    "classes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"classId\": \"<string>\",\n  \"evidenceNote\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b26da2ba-65be-4e64-91ea-b4d7d33276fb",
+          "name": "Revoke a validator's class on a project",
+          "request": {
+            "name": "Revoke a validator's class on a project",
+            "description": {
+              "content": "Soft-revoke a validator's class grant on a project. Idempotent: revoking a class the validator does not hold is a no-op.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "projects",
+                ":projectId",
+                "validators",
+                ":validatorId",
+                "classes",
+                ":classId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "projectId",
+                  "description": "(Required) Project ID."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "validatorId",
+                  "description": "(Required) Validator (user) ID."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) Class ID to revoke."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2627f177-ac5e-4bb1-9019-69137ab91fef",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "validators",
+                    ":validatorId",
+                    "classes",
+                    ":classId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) Class ID to revoke."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"revoked\": false,\n  \"$schema\": \"https://DGSwKdMEn.wsojm-qLip3uaBzii-YTpxAdxBpkcDtgWifUfCwOmQcRPsCo0Z0lg\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d79973d3-5ebf-4dae-ba96-876b22991d39",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "projects",
+                    ":projectId",
+                    "validators",
+                    ":validatorId",
+                    "classes",
+                    ":classId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "projectId",
+                      "description": "(Required) Project ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) Class ID to revoke."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0bf6d94f-588e-4799-9cbc-fe90ff786abd",
+          "name": "List or look up validators",
+          "request": {
+            "name": "List or look up validators",
+            "description": {
+              "content": "With ?email= set, looks up the single org validator matching that email (case-insensitive). Without ?email=, lists the org validator roster (org is_validator members union project-assigned validators), cursor-paginated, newest joined_at first. A lookup that matches no user, or a user who is neither an org validator nor assigned to a project in the org, returns 404 validator_not_found — the API never leaks whether a user exists outside your organization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "validators"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "email",
+                  "value": "<string>",
+                  "description": "Optional email to look up a single org validator (case-insensitive). When set, limit/cursor are ignored."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Maximum number of validators to return (1-100); list mode only."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from a previous response's nextCursor; list mode only."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "93d41ee6-bec3-4183-b428-e065ec5e8946",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "email",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"validator\": {\n    \"userId\": \"string\",\n    \"subject\": \"string\",\n    \"email\": \"string\",\n    \"evmAddress\": \"string\",\n    \"isOriginator\": true,\n    \"isValidator\": false,\n    \"joinedAt\": \"string\"\n  },\n  \"data\": [\n    {\n      \"userId\": \"string\",\n      \"subject\": \"string\",\n      \"email\": \"string\",\n      \"evmAddress\": \"string\",\n      \"isOriginator\": true,\n      \"isValidator\": true,\n      \"joinedAt\": \"string\"\n    },\n    {\n      \"userId\": \"string\",\n      \"subject\": \"string\",\n      \"email\": \"string\",\n      \"evmAddress\": \"string\",\n      \"isOriginator\": false,\n      \"isValidator\": false,\n      \"joinedAt\": \"string\"\n    }\n  ],\n  \"hasMore\": true,\n  \"nextCursor\": \"string\",\n  \"$schema\": \"http://Hm.xlssBpYWnM0jblwgXeo+IdYF6EsEL7x41HLZjb3i\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7146e718-41c0-4331-81d3-683edaf8b8cc",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "email",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6dbd09f8-be13-4687-ac97-1d8d11a697ff",
+          "name": "Assign a validator to projects",
+          "request": {
+            "name": "Assign a validator to projects",
+            "description": {
+              "content": "Assign a validator to one or more projects in the API key's organization. The validator must already be a validator of the organization unless autoEnroll is set (which promotes an existing org member to validator first). Every project must belong to the organization. Applied as an all-or-nothing batch.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "validators",
+                ":validatorId",
+                "assign"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "validatorId",
+                  "description": "(Required) Validator (user) ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projects\": [\n    {\n      \"id\": \"<uuid>\",\n      \"classId\": \"<string>\",\n      \"evidenceNote\": \"<string>\"\n    }\n  ],\n  \"autoEnroll\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cec990ae-59b8-447c-b09d-0df9e8bb5e9c",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators",
+                    ":validatorId",
+                    "assign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"projects\": [\n    {\n      \"id\": \"5dd0afa6-6a73-b3ba-5189-c07251e1643c\",\n      \"classId\": \"string\",\n      \"evidenceNote\": \"string\"\n    }\n  ],\n  \"autoEnroll\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"assigned\": 1581,\n  \"alreadyAssigned\": 5090,\n  \"classesGranted\": 8905,\n  \"$schema\": \"http://WGnUOhGfGfEFSfQstgbfpiaXCJshr.pdTAhw\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9fa1928d-2dad-45d6-ac31-ff4812d0a6e3",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators",
+                    ":validatorId",
+                    "assign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"projects\": [\n    {\n      \"id\": \"5dd0afa6-6a73-b3ba-5189-c07251e1643c\",\n      \"classId\": \"string\",\n      \"evidenceNote\": \"string\"\n    }\n  ],\n  \"autoEnroll\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "724d8016-367d-4e26-b3e8-31267c30b560",
+          "name": "List a validator's project assignments",
+          "request": {
+            "name": "List a validator's project assignments",
+            "description": {
+              "content": "List the projects a validator is currently assigned to within the API key's organization. Returns an empty list for an unknown validator or one with no assignments.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "validators",
+                ":validatorId",
+                "projects"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "validatorId",
+                  "description": "(Required) Validator (user) ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e14be6cc-23d6-4bb4-8ee2-5b2e605e6a46",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators",
+                    ":validatorId",
+                    "projects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"assignmentId\": \"string\",\n      \"projectId\": \"string\",\n      \"projectName\": \"string\",\n      \"assignedAt\": \"string\"\n    },\n    {\n      \"assignmentId\": \"string\",\n      \"projectId\": \"string\",\n      \"projectName\": \"string\",\n      \"assignedAt\": \"string\"\n    }\n  ],\n  \"$schema\": \"http://ZyNqoKEaY.jkKVFMdzSHRo3X785-6mElPIV.I1XvMsu5z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3db0c2e7-bd7e-4ee3-81c0-d8c92bdd70cc",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators",
+                    ":validatorId",
+                    "projects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "851c32e0-ef80-4d83-9d67-8f2fd5b3c284",
+          "name": "Unassign a validator from projects",
+          "request": {
+            "name": "Unassign a validator from projects",
+            "description": {
+              "content": "Revoke a validator's assignment to one or more projects in the API key's organization. Idempotent: unassigning a project the validator is not assigned to is a no-op. Class grants are separate — revoke them via DELETE /projects/{projectId}/validators/{validatorId}/classes/{classId}.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "validators",
+                ":validatorId",
+                "unassign"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "validatorId",
+                  "description": "(Required) Validator (user) ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectIds\": [\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8fd8f79e-71fe-410b-8c25-f101ff298109",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators",
+                    ":validatorId",
+                    "unassign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"projectIds\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"unassigned\": 677,\n  \"$schema\": \"http://WxesXDMTPfoZFzKlhW.ltdgYjK3JPluHqNPqpFxd3gLH-SxiLBGMDn9dJH8xLkjc-iBdtgfFzn9,IzMeMu,7mEjYj\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f156c860-8a43-471a-8cbc-46d53d82e92c",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "validators",
+                    ":validatorId",
+                    "unassign"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "validatorId",
+                      "description": "(Required) Validator (user) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"projectIds\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"string\",\n    \"code\": \"string\",\n    \"message\": \"string\",\n    \"param\": \"string\"\n  },\n  \"$schema\": \"https://eRsLmmXFdKGseQVkQYuutGPRmCQylXBZe.kgpysR\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/developer/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ed28b67c-4d1c-4217-9dfc-816ff17175cf",
+    "name": "Sapien Developer Datapoints Validators API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "External developer API authenticated with API keys.",
+      "type": "text/plain"
+    }
+  }
+}

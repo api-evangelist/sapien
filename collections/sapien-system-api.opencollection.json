@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sapien Developer Datapoints System API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "System",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ping developer API",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/developer/v1/ping"
+          },
+          "docs": "Checks API key authentication and developer API availability."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
