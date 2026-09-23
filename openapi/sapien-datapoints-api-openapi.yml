@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   description: External developer API authenticated with API keys.
   title: Sapien Developer Datapoints API
@@ -80,6 +80,22 @@ components:
       - qualityRatingMedian
       - consensusStrength
       type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
     DeveloperStatusError:
       additionalProperties: false
       properties:
@@ -96,22 +112,6 @@ components:
           type: string
       required:
       - error
-      type: object
-    ErrorEnvelope:
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - code
-      - message
       type: object
   securitySchemes:
     bearerAuth:

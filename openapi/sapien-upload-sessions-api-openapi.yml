@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   description: External developer API authenticated with API keys.
-  title: Sapien Developer Datapoints Upload Sessions API
+  title: Sapien Developer Upload Sessions API
   version: 1.0.0
 servers:
 - url: /developer/v1
@@ -265,200 +265,6 @@ paths:
       - Upload Sessions
 components:
   schemas:
-    DeclaredUploadFile:
-      additionalProperties: false
-      properties:
-        relPath:
-          description: File path relative to the session folder, forward slashes, no leading slash and no ".." (e.g. "data/rows.csv").
-          maxLength: 900
-          minLength: 1
-          type: string
-        size:
-          description: Exact file size in bytes (max 5 GiB). Finalize verifies the uploaded object against this size, so declare the real size.
-          format: int64
-          maximum: 5368709120
-          minimum: 0
-          type: integer
-      required:
-      - relPath
-      - size
-      type: object
-    CreateUploadSessionOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateUploadSessionOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        expiresAt:
-          description: RFC 3339 time the presigned URLs stop working. The session itself does not expire — request fresh URLs via the declare-files endpoint.
-          type: string
-        files:
-          description: One presigned PUT URL per declared file.
-          items:
-            $ref: '#/components/schemas/PresignedUploadResource'
-          type:
-          - array
-          - 'null'
-        keyPrefix:
-          description: Server-owned object-storage folder all session files live under.
-          type: string
-        uploadId:
-          description: ID of the new upload session. Pass it to the declare-files, finalize, and ingest endpoints.
-          type: string
-      required:
-      - uploadId
-      - keyPrefix
-      - files
-      - expiresAt
-      type: object
-    DeclaredFileResource:
-      additionalProperties: false
-      properties:
-        relPath:
-          description: File path relative to the session folder.
-          type: string
-        size:
-          description: Declared size in bytes — the per-file upload cap enforced when the session is processed.
-          format: int64
-          type: integer
-      required:
-      - relPath
-      - size
-      type: object
-    DeclareUploadFilesOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/DeclareUploadFilesOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        expiresAt:
-          description: RFC 3339 time these presigned URLs stop working. Call this endpoint again for fresh ones.
-          type: string
-        files:
-          description: One presigned PUT URL per file in this request.
-          items:
-            $ref: '#/components/schemas/PresignedUploadResource'
-          type:
-          - array
-          - 'null'
-        keyPrefix:
-          description: Server-owned object-storage folder all session files live under.
-          type: string
-      required:
-      - keyPrefix
-      - files
-      - expiresAt
-      type: object
-    CreateUploadSessionInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateUploadSessionInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        files:
-          description: Files this session will contain. More files can be declared later via the declare-files endpoint.
-          items:
-            $ref: '#/components/schemas/DeclaredUploadFile'
-          maxItems: 1000
-          minItems: 1
-          type:
-          - array
-          - 'null'
-      required:
-      - files
-      type: object
-    GetUploadSessionStatusOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/GetUploadSessionStatusOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        run:
-          $ref: '#/components/schemas/IngestRunResource'
-          description: Most recent ingest run for this session; null before the first process call.
-        sessionStatus:
-          description: 'Session lifecycle: open, processing, complete, or failed.'
-          type: string
-        uploadId:
-          description: Upload session ID.
-          type: string
-      required:
-      - uploadId
-      - sessionStatus
-      - run
-      type: object
-    PresignedUploadResource:
-      additionalProperties: false
-      properties:
-        key:
-          description: Full object-storage key the file will land at (session prefix + relPath).
-          type: string
-        relPath:
-          description: The file's path relative to the session folder, exactly as declared.
-          type: string
-        uploadUrl:
-          description: Presigned PUT URL. Upload the file bytes directly to this URL with an HTTP PUT; no Authorization header is needed (or allowed) on that request.
-          type: string
-      required:
-      - relPath
-      - key
-      - uploadUrl
-      type: object
-    ProcessUploadSessionInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/ProcessUploadSessionInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        dryRun:
-          description: Run the full ingest pipeline without persisting datapoints or validations. Defaults to false.
-          type: boolean
-        skipExisting:
-          description: Skip datapoints whose checksum already exists for the project instead of failing on them. Defaults to false.
-          type: boolean
-      type: object
-    DeclareUploadFilesInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/DeclareUploadFilesInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        files:
-          description: Files to declare (new paths are added to the session; already-declared paths get fresh URLs and their declared size is updated).
-          items:
-            $ref: '#/components/schemas/DeclaredUploadFile'
-          maxItems: 1000
-          minItems: 1
-          type:
-          - array
-          - 'null'
-      required:
-      - files
-      type: object
     GetUploadSessionOutputBody:
       additionalProperties: false
       properties:
@@ -509,6 +315,113 @@ components:
       - createdAt
       - updatedAt
       type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+    DeclaredFileResource:
+      additionalProperties: false
+      properties:
+        relPath:
+          description: File path relative to the session folder.
+          type: string
+        size:
+          description: Declared size in bytes — the per-file upload cap enforced when the session is processed.
+          format: int64
+          type: integer
+      required:
+      - relPath
+      - size
+      type: object
+    DeclareUploadFilesOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeclareUploadFilesOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        expiresAt:
+          description: RFC 3339 time these presigned URLs stop working. Call this endpoint again for fresh ones.
+          type: string
+        files:
+          description: One presigned PUT URL per file in this request.
+          items:
+            $ref: '#/components/schemas/PresignedUploadResource'
+          type:
+          - array
+          - 'null'
+        keyPrefix:
+          description: Server-owned object-storage folder all session files live under.
+          type: string
+      required:
+      - keyPrefix
+      - files
+      - expiresAt
+      type: object
+    ProcessUploadSessionInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ProcessUploadSessionInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        dryRun:
+          description: Run the full ingest pipeline without persisting datapoints or validations. Defaults to false.
+          type: boolean
+        skipExisting:
+          description: Skip datapoints whose checksum already exists for the project instead of failing on them. Defaults to false.
+          type: boolean
+      type: object
+    CreateUploadSessionOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateUploadSessionOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        expiresAt:
+          description: RFC 3339 time the presigned URLs stop working. The session itself does not expire — request fresh URLs via the declare-files endpoint.
+          type: string
+        files:
+          description: One presigned PUT URL per declared file.
+          items:
+            $ref: '#/components/schemas/PresignedUploadResource'
+          type:
+          - array
+          - 'null'
+        keyPrefix:
+          description: Server-owned object-storage folder all session files live under.
+          type: string
+        uploadId:
+          description: ID of the new upload session. Pass it to the declare-files, finalize, and ingest endpoints.
+          type: string
+      required:
+      - uploadId
+      - keyPrefix
+      - files
+      - expiresAt
+      type: object
     ProcessUploadSessionOutputBody:
       additionalProperties: false
       properties:
@@ -558,21 +471,73 @@ components:
       required:
       - error
       type: object
-    ErrorEnvelope:
+    GetUploadSessionStatusOutputBody:
       additionalProperties: false
       properties:
-        code:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/GetUploadSessionStatusOutputBody.json
+          format: uri
+          readOnly: true
           type: string
-        message:
+        run:
+          $ref: '#/components/schemas/IngestRunResource'
+          description: Most recent ingest run for this session; null before the first process call.
+        sessionStatus:
+          description: 'Session lifecycle: open, processing, complete, or failed.'
           type: string
-        param:
-          type: string
-        type:
+        uploadId:
+          description: Upload session ID.
           type: string
       required:
-      - type
-      - code
-      - message
+      - uploadId
+      - sessionStatus
+      - run
+      type: object
+    DeclareUploadFilesInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeclareUploadFilesInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        files:
+          description: Files to declare (new paths are added to the session; already-declared paths get fresh URLs and their declared size is updated).
+          items:
+            $ref: '#/components/schemas/DeclaredUploadFile'
+          maxItems: 1000
+          minItems: 1
+          type:
+          - array
+          - 'null'
+      required:
+      - files
+      type: object
+    CreateUploadSessionInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateUploadSessionInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        files:
+          description: Files this session will contain. More files can be declared later via the declare-files endpoint.
+          items:
+            $ref: '#/components/schemas/DeclaredUploadFile'
+          maxItems: 1000
+          minItems: 1
+          type:
+          - array
+          - 'null'
+      required:
+      - files
       type: object
     IngestRunResource:
       additionalProperties: false
@@ -622,6 +587,41 @@ components:
       - startedAt
       - updatedAt
       - finishedAt
+      type: object
+    DeclaredUploadFile:
+      additionalProperties: false
+      properties:
+        relPath:
+          description: File path relative to the session folder, forward slashes, no leading slash and no ".." (e.g. "data/rows.csv").
+          maxLength: 900
+          minLength: 1
+          type: string
+        size:
+          description: Exact file size in bytes (max 5 GiB). Finalize verifies the uploaded object against this size, so declare the real size.
+          format: int64
+          maximum: 5368709120
+          minimum: 0
+          type: integer
+      required:
+      - relPath
+      - size
+      type: object
+    PresignedUploadResource:
+      additionalProperties: false
+      properties:
+        key:
+          description: Full object-storage key the file will land at (session prefix + relPath).
+          type: string
+        relPath:
+          description: The file's path relative to the session folder, exactly as declared.
+          type: string
+        uploadUrl:
+          description: Presigned PUT URL. Upload the file bytes directly to this URL with an HTTP PUT; no Authorization header is needed (or allowed) on that request.
+          type: string
+      required:
+      - relPath
+      - key
+      - uploadUrl
       type: object
   securitySchemes:
     bearerAuth:

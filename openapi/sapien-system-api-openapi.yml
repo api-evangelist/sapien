@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   description: External developer API authenticated with API keys.
-  title: Sapien Developer Datapoints System API
+  title: Sapien Developer System API
   version: 1.0.0
 servers:
 - url: /developer/v1
@@ -32,22 +32,6 @@ paths:
       - System
 components:
   schemas:
-    PingOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/PingOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        pong:
-          description: Always true when the API key is valid.
-          type: boolean
-      required:
-      - pong
-      type: object
     DeveloperStatusError:
       additionalProperties: false
       properties:
@@ -80,6 +64,22 @@ components:
       - type
       - code
       - message
+      type: object
+    PingOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/PingOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        pong:
+          description: Always true when the API key is valid.
+          type: boolean
+      required:
+      - pong
       type: object
   securitySchemes:
     bearerAuth:

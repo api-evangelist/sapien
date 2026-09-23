@@ -1,11 +1,7 @@
 {
   "provider": "sapien",
   "sources": [
-    "sapien-datapoints-api-openapi.yml",
-    "sapien-projects-api-openapi.yml",
-    "sapien-system-api-openapi.yml",
-    "sapien-upload-sessions-api-openapi.yml",
-    "sapien-validators-api-openapi.yml"
+    "_original/sapien-poq-openapi-original.json"
   ],
   "outputs": [
     "sapien-datapoints-api-openapi.yml",
@@ -17,6 +13,16 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "sapien-poq-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "sapien-datapoints-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sapien-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sapien-system-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sapien-upload-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sapien-validators-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

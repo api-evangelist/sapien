@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   description: External developer API authenticated with API keys.
-  title: Sapien Developer Datapoints Projects API
+  title: Sapien Developer Projects API
   version: 1.0.0
 servers:
 - url: /developer/v1
@@ -139,27 +139,33 @@ paths:
       - Projects
 components:
   schemas:
-    CreateProjectInputBody:
+    CreateProjectOutputBody:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - /developer/v1/CreateProjectInputBody.json
+          - /developer/v1/CreateProjectOutputBody.json
           format: uri
           readOnly: true
           type: string
-        name:
-          description: Human-readable project name.
-          maxLength: 200
-          minLength: 1
+        projectId:
+          description: ID of the newly created project.
           type: string
-        spec:
-          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
-          type: object
+        specId:
+          description: ID of the project's first compiled spec.
+          type: string
+        specVersion:
+          description: Spec version parsed from the submitted spec.
+          type: string
+        status:
+          description: Lifecycle status of the new project (always "active").
+          type: string
       required:
-      - name
-      - spec
+      - projectId
+      - specId
+      - specVersion
+      - status
       type: object
     ProjectResource:
       additionalProperties: false
@@ -236,6 +242,44 @@ components:
       - createdAt
       - updatedAt
       type: object
+    CreateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: Human-readable project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        spec:
+          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
+          type: object
+      required:
+      - name
+      - spec
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
     ListProjectsOutputBody:
       additionalProperties: false
       properties:
@@ -283,22 +327,6 @@ components:
       required:
       - error
       type: object
-    ErrorEnvelope:
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - code
-      - message
-      type: object
     UpdateProjectInputBody:
       additionalProperties: false
       properties:
@@ -334,34 +362,6 @@ components:
         paused:
           description: Set true to pause new validation claims, false to resume.
           type: boolean
-      type: object
-    CreateProjectOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateProjectOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        projectId:
-          description: ID of the newly created project.
-          type: string
-        specId:
-          description: ID of the project's first compiled spec.
-          type: string
-        specVersion:
-          description: Spec version parsed from the submitted spec.
-          type: string
-        status:
-          description: Lifecycle status of the new project (always "active").
-          type: string
-      required:
-      - projectId
-      - specId
-      - specVersion
-      - status
       type: object
   securitySchemes:
     bearerAuth:
