@@ -139,6 +139,110 @@ paths:
       - Projects
 components:
   schemas:
+    CreateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: Human-readable project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        spec:
+          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
+          type: object
+      required:
+      - name
+      - spec
+      type: object
+    ListProjectsOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListProjectsOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: Projects in the API key's organization, newest first.
+          items:
+            $ref: '#/components/schemas/ProjectResource'
+          type:
+          - array
+          - 'null'
+        hasMore:
+          description: True when more projects are available after this page.
+          type: boolean
+        nextCursor:
+          description: Cursor to pass as ?cursor= for the next page; null on the last page.
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - hasMore
+      - nextCursor
+      type: object
+    UpdateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/UpdateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        archived:
+          description: Set true to archive the project (hidden from validators, no new claims), false to unarchive.
+          type: boolean
+        autoConsensus:
+          description: Set true to enable Auto Consensus test mode (synthetic validators auto-complete validations), false to disable.
+          type: boolean
+        autoConsensusSpread:
+          description: 'Auto Consensus vote spread: tight (unanimous), medium (realistic), or wild (contested, may escalate).'
+          enum:
+          - tight
+          - medium
+          - wild
+          type: string
+        description:
+          description: New project description; pass an empty string to clear it.
+          maxLength: 2000
+          type: string
+        name:
+          description: New project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        paused:
+          description: Set true to pause new validation claims, false to resume.
+          type: boolean
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
     CreateProjectOutputBody:
       additionalProperties: false
       properties:
@@ -242,74 +346,6 @@ components:
       - createdAt
       - updatedAt
       type: object
-    CreateProjectInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateProjectInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        name:
-          description: Human-readable project name.
-          maxLength: 200
-          minLength: 1
-          type: string
-        spec:
-          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
-          type: object
-      required:
-      - name
-      - spec
-      type: object
-    ErrorEnvelope:
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - code
-      - message
-      type: object
-    ListProjectsOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/ListProjectsOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        data:
-          description: Projects in the API key's organization, newest first.
-          items:
-            $ref: '#/components/schemas/ProjectResource'
-          type:
-          - array
-          - 'null'
-        hasMore:
-          description: True when more projects are available after this page.
-          type: boolean
-        nextCursor:
-          description: Cursor to pass as ?cursor= for the next page; null on the last page.
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - hasMore
-      - nextCursor
-      type: object
     DeveloperStatusError:
       additionalProperties: false
       properties:
@@ -326,42 +362,6 @@ components:
           type: string
       required:
       - error
-      type: object
-    UpdateProjectInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/UpdateProjectInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        archived:
-          description: Set true to archive the project (hidden from validators, no new claims), false to unarchive.
-          type: boolean
-        autoConsensus:
-          description: Set true to enable Auto Consensus test mode (synthetic validators auto-complete validations), false to disable.
-          type: boolean
-        autoConsensusSpread:
-          description: 'Auto Consensus vote spread: tight (unanimous), medium (realistic), or wild (contested, may escalate).'
-          enum:
-          - tight
-          - medium
-          - wild
-          type: string
-        description:
-          description: New project description; pass an empty string to clear it.
-          maxLength: 2000
-          type: string
-        name:
-          description: New project name.
-          maxLength: 200
-          minLength: 1
-          type: string
-        paused:
-          description: Set true to pause new validation claims, false to resume.
-          type: boolean
       type: object
   securitySchemes:
     bearerAuth:

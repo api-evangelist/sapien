@@ -51,7 +51,7 @@ tags:
 - Artificial Intelligence
 - Data Quality
 - Data Labeling
-- Machine-Learning
+- Machine Learning
 - Human-in-the-Loop
 - Attestation
 - Blockchain
@@ -68,6 +68,7 @@ tags_raw:
 - Blockchain
 - Consensus
 - MCP
+- Machine-Learning
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
