@@ -139,6 +139,87 @@ paths:
       - Projects
 components:
   schemas:
+    UpdateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/UpdateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        archived:
+          description: Set true to archive the project (hidden from validators, no new claims), false to unarchive.
+          type: boolean
+        autoConsensus:
+          description: Set true to enable Auto Consensus test mode (synthetic validators auto-complete validations), false to disable.
+          type: boolean
+        autoConsensusSpread:
+          description: 'Auto Consensus vote spread: tight (unanimous), medium (realistic), or wild (contested, may escalate).'
+          enum:
+          - tight
+          - medium
+          - wild
+          type: string
+        description:
+          description: New project description; pass an empty string to clear it.
+          maxLength: 2000
+          type: string
+        name:
+          description: New project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        paused:
+          description: Set true to pause new validation claims, false to resume.
+          type: boolean
+      type: object
+    CreateProjectOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        projectId:
+          description: ID of the newly created project.
+          type: string
+        specId:
+          description: ID of the project's first compiled spec.
+          type: string
+        specVersion:
+          description: Spec version parsed from the submitted spec.
+          type: string
+        status:
+          description: Lifecycle status of the new project (always "active").
+          type: string
+      required:
+      - projectId
+      - specId
+      - specVersion
+      - status
+      type: object
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
     CreateProjectInputBody:
       additionalProperties: false
       properties:
@@ -191,42 +272,6 @@ components:
       - hasMore
       - nextCursor
       type: object
-    UpdateProjectInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/UpdateProjectInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        archived:
-          description: Set true to archive the project (hidden from validators, no new claims), false to unarchive.
-          type: boolean
-        autoConsensus:
-          description: Set true to enable Auto Consensus test mode (synthetic validators auto-complete validations), false to disable.
-          type: boolean
-        autoConsensusSpread:
-          description: 'Auto Consensus vote spread: tight (unanimous), medium (realistic), or wild (contested, may escalate).'
-          enum:
-          - tight
-          - medium
-          - wild
-          type: string
-        description:
-          description: New project description; pass an empty string to clear it.
-          maxLength: 2000
-          type: string
-        name:
-          description: New project name.
-          maxLength: 200
-          minLength: 1
-          type: string
-        paused:
-          description: Set true to pause new validation claims, false to resume.
-          type: boolean
-      type: object
     ErrorEnvelope:
       additionalProperties: false
       properties:
@@ -242,34 +287,6 @@ components:
       - type
       - code
       - message
-      type: object
-    CreateProjectOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateProjectOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        projectId:
-          description: ID of the newly created project.
-          type: string
-        specId:
-          description: ID of the project's first compiled spec.
-          type: string
-        specVersion:
-          description: Spec version parsed from the submitted spec.
-          type: string
-        status:
-          description: Lifecycle status of the new project (always "active").
-          type: string
-      required:
-      - projectId
-      - specId
-      - specVersion
-      - status
       type: object
     ProjectResource:
       additionalProperties: false
@@ -345,23 +362,6 @@ components:
       - numValidators
       - createdAt
       - updatedAt
-      type: object
-    DeveloperStatusError:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/DeveloperStatusError.json
-          format: uri
-          readOnly: true
-          type: string
-        error:
-          $ref: '#/components/schemas/ErrorEnvelope'
-        requestId:
-          type: string
-      required:
-      - error
       type: object
   securitySchemes:
     bearerAuth:

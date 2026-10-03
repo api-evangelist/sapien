@@ -391,33 +391,22 @@ paths:
       - Validators
 components:
   schemas:
-    ValidatorClassGrantResource:
+    UnassignValidatorOutputBody:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - /developer/v1/ValidatorClassGrantResource.json
+          - /developer/v1/UnassignValidatorOutputBody.json
           format: uri
           readOnly: true
           type: string
-        classId:
-          description: Granted class ID.
-          type: string
-        evidenceNote:
-          description: Recorded qualification justification.
-          type: string
-        id:
-          description: Class-grant ID.
-          type: string
-        userId:
-          description: Validator (user) ID.
-          type: string
+        unassigned:
+          description: Number of project assignments processed (revoke is idempotent, so an already-unassigned project still counts).
+          format: int64
+          type: integer
       required:
-      - id
-      - userId
-      - classId
-      - evidenceNote
+      - unassigned
       type: object
     ListValidatorsOutputBody:
       additionalProperties: false
@@ -452,6 +441,65 @@ components:
       - data
       - hasMore
       - nextCursor
+      type: object
+    ValidatorResource:
+      additionalProperties: false
+      properties:
+        email:
+          description: Validator email; empty when the user has none on file.
+          type: string
+        evmAddress:
+          description: Validator EVM address; empty when the user has none on file.
+          type: string
+        isOriginator:
+          description: True when the user is an originator of the organization.
+          type: boolean
+        isValidator:
+          description: True when the user is a validator of the organization (is_validator flag or project assignment).
+          type: boolean
+        joinedAt:
+          description: RFC3339 time the user became an org validator (org membership created_at, or first project assignment).
+          type: string
+        subject:
+          description: Validator subject (auth identifier).
+          type: string
+        userId:
+          description: Validator (user) ID.
+          type: string
+      required:
+      - userId
+      - subject
+      - email
+      - evmAddress
+      - isOriginator
+      - isValidator
+      - joinedAt
+      type: object
+    CreateProjectInviteInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectInviteInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        classId:
+          description: Optional class to pre-stage on the invite (fulfilled at login acceptance). Must be declared in the project's spec.
+          type: string
+        email:
+          description: Email address to invite (case-insensitive; normalized on write).
+          minLength: 1
+          type: string
+        evidenceNote:
+          description: Why the invitee qualifies for classId; required when classId is set.
+          type: string
+        sendEmail:
+          description: Send the invite email (ProjectInvite template). Defaults to true; set to false to skip the email (e.g. for testing or custom delivery).
+          type: boolean
+      required:
+      - email
       type: object
     ProjectInviteResource:
       additionalProperties: false
@@ -555,97 +603,95 @@ components:
       required:
       - data
       type: object
-    AssignProjectEntry:
-      additionalProperties: false
-      properties:
-        classId:
-          description: Optional class to grant on this project (must be declared in the project's spec).
-          type: string
-        evidenceNote:
-          description: Why the validator qualifies for classId; required when classId is set.
-          type: string
-        id:
-          description: Project ID.
-          format: uuid
-          type: string
-      required:
-      - id
-      type: object
-    ErrorEnvelope:
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - code
-      - message
-      type: object
-    UnassignValidatorInputBody:
+    AssignValidatorInputBody:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - /developer/v1/UnassignValidatorInputBody.json
+          - /developer/v1/AssignValidatorInputBody.json
           format: uri
           readOnly: true
           type: string
-        projectIds:
-          description: IDs of projects in the API key's organization to unassign this validator from.
+        autoEnroll:
+          description: When true, promote the user to an org validator (is_validator) before assignment if they are an existing org member but not yet flagged a validator. The user must have a user row; an unknown validatorId still returns 404 validator_not_found.
+          type: boolean
+        projects:
+          description: Projects in the API key's organization to assign this validator to, each optionally granting a class.
           items:
-            type: string
+            $ref: '#/components/schemas/AssignProjectEntry'
           minItems: 1
           type:
           - array
           - 'null'
       required:
-      - projectIds
+      - projects
       type: object
-    GrantValidatorClassInputBody:
+    DeveloperStatusError:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - /developer/v1/GrantValidatorClassInputBody.json
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
+    ValidatorAssignmentResource:
+      additionalProperties: false
+      properties:
+        assignedAt:
+          description: RFC3339 time the validator was assigned to the project.
+          type: string
+        assignmentId:
+          description: ID of the validator↔project assignment.
+          type: string
+        projectId:
+          description: ID of the assigned project.
+          type: string
+        projectName:
+          description: Name of the assigned project.
+          type: string
+      required:
+      - assignmentId
+      - projectId
+      - projectName
+      - assignedAt
+      type: object
+    ValidatorClassGrantResource:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ValidatorClassGrantResource.json
           format: uri
           readOnly: true
           type: string
         classId:
-          description: Class ID declared in the project's spec (see GET /projects/{projectId}/classes).
-          minLength: 1
+          description: Granted class ID.
           type: string
         evidenceNote:
-          description: Why this validator qualifies for the class (recorded for audit).
-          minLength: 1
+          description: Recorded qualification justification.
+          type: string
+        id:
+          description: Class-grant ID.
+          type: string
+        userId:
+          description: Validator (user) ID.
           type: string
       required:
+      - id
+      - userId
       - classId
       - evidenceNote
-      type: object
-    UnassignValidatorOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/UnassignValidatorOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        unassigned:
-          description: Number of project assignments processed (revoke is idempotent, so an already-unassigned project still counts).
-          format: int64
-          type: integer
-      required:
-      - unassigned
       type: object
     ListProjectInvitesOutputBody:
       additionalProperties: false
@@ -676,76 +722,6 @@ components:
       - data
       - hasMore
       - nextCursor
-      type: object
-    ValidatorResource:
-      additionalProperties: false
-      properties:
-        email:
-          description: Validator email; empty when the user has none on file.
-          type: string
-        evmAddress:
-          description: Validator EVM address; empty when the user has none on file.
-          type: string
-        isOriginator:
-          description: True when the user is an originator of the organization.
-          type: boolean
-        isValidator:
-          description: True when the user is a validator of the organization (is_validator flag or project assignment).
-          type: boolean
-        joinedAt:
-          description: RFC3339 time the user became an org validator (org membership created_at, or first project assignment).
-          type: string
-        subject:
-          description: Validator subject (auth identifier).
-          type: string
-        userId:
-          description: Validator (user) ID.
-          type: string
-      required:
-      - userId
-      - subject
-      - email
-      - evmAddress
-      - isOriginator
-      - isValidator
-      - joinedAt
-      type: object
-    CancelProjectInviteOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CancelProjectInviteOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        cancelled:
-          description: Always true on success; cancellation is idempotent for a pending invite.
-          type: boolean
-      required:
-      - cancelled
-      type: object
-    ValidatorAssignmentResource:
-      additionalProperties: false
-      properties:
-        assignedAt:
-          description: RFC3339 time the validator was assigned to the project.
-          type: string
-        assignmentId:
-          description: ID of the validator↔project assignment.
-          type: string
-        projectId:
-          description: ID of the assigned project.
-          type: string
-        projectName:
-          description: Name of the assigned project.
-          type: string
-      required:
-      - assignmentId
-      - projectId
-      - projectName
-      - assignedAt
       type: object
     AssignValidatorOutputBody:
       additionalProperties: false
@@ -811,32 +787,6 @@ components:
       - consensusWeight
       - model
       type: object
-    CreateProjectInviteInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateProjectInviteInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        classId:
-          description: Optional class to pre-stage on the invite (fulfilled at login acceptance). Must be declared in the project's spec.
-          type: string
-        email:
-          description: Email address to invite (case-insensitive; normalized on write).
-          minLength: 1
-          type: string
-        evidenceNote:
-          description: Why the invitee qualifies for classId; required when classId is set.
-          type: string
-        sendEmail:
-          description: Send the invite email (ProjectInvite template). Defaults to true; set to false to skip the email (e.g. for testing or custom delivery).
-          type: boolean
-      required:
-      - email
-      type: object
     RevokeValidatorClassOutputBody:
       additionalProperties: false
       properties:
@@ -853,46 +803,96 @@ components:
       required:
       - revoked
       type: object
-    AssignValidatorInputBody:
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+    AssignProjectEntry:
+      additionalProperties: false
+      properties:
+        classId:
+          description: Optional class to grant on this project (must be declared in the project's spec).
+          type: string
+        evidenceNote:
+          description: Why the validator qualifies for classId; required when classId is set.
+          type: string
+        id:
+          description: Project ID.
+          format: uuid
+          type: string
+      required:
+      - id
+      type: object
+    CancelProjectInviteOutputBody:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - /developer/v1/AssignValidatorInputBody.json
+          - /developer/v1/CancelProjectInviteOutputBody.json
           format: uri
           readOnly: true
           type: string
-        autoEnroll:
-          description: When true, promote the user to an org validator (is_validator) before assignment if they are an existing org member but not yet flagged a validator. The user must have a user row; an unknown validatorId still returns 404 validator_not_found.
+        cancelled:
+          description: Always true on success; cancellation is idempotent for a pending invite.
           type: boolean
-        projects:
-          description: Projects in the API key's organization to assign this validator to, each optionally granting a class.
+      required:
+      - cancelled
+      type: object
+    GrantValidatorClassInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/GrantValidatorClassInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        classId:
+          description: Class ID declared in the project's spec (see GET /projects/{projectId}/classes).
+          minLength: 1
+          type: string
+        evidenceNote:
+          description: Why this validator qualifies for the class (recorded for audit).
+          minLength: 1
+          type: string
+      required:
+      - classId
+      - evidenceNote
+      type: object
+    UnassignValidatorInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/UnassignValidatorInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        projectIds:
+          description: IDs of projects in the API key's organization to unassign this validator from.
           items:
-            $ref: '#/components/schemas/AssignProjectEntry'
+            type: string
           minItems: 1
           type:
           - array
           - 'null'
       required:
-      - projects
-      type: object
-    DeveloperStatusError:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/DeveloperStatusError.json
-          format: uri
-          readOnly: true
-          type: string
-        error:
-          $ref: '#/components/schemas/ErrorEnvelope'
-        requestId:
-          type: string
-      required:
-      - error
+      - projectIds
       type: object
   securitySchemes:
     bearerAuth:

@@ -41,6 +41,39 @@ paths:
       - Datapoints
 components:
   schemas:
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
     DatapointConsensusResource:
       additionalProperties: false
       properties:
@@ -79,39 +112,6 @@ components:
       - qualityRatingMean
       - qualityRatingMedian
       - consensusStrength
-      type: object
-    ErrorEnvelope:
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - code
-      - message
-      type: object
-    DeveloperStatusError:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/DeveloperStatusError.json
-          format: uri
-          readOnly: true
-          type: string
-        error:
-          $ref: '#/components/schemas/ErrorEnvelope'
-        requestId:
-          type: string
-      required:
-      - error
       type: object
   securitySchemes:
     bearerAuth:
