@@ -32,21 +32,21 @@ paths:
       - System
 components:
   schemas:
-    ErrorEnvelope:
+    PingOutputBody:
       additionalProperties: false
       properties:
-        code:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/PingOutputBody.json
+          format: uri
+          readOnly: true
           type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
+        pong:
+          description: Always true when the API key is valid.
+          type: boolean
       required:
-      - type
-      - code
-      - message
+      - pong
       type: object
     DeveloperStatusError:
       additionalProperties: false
@@ -65,21 +65,21 @@ components:
       required:
       - error
       type: object
-    PingOutputBody:
+    ErrorEnvelope:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/PingOutputBody.json
-          format: uri
-          readOnly: true
+        code:
           type: string
-        pong:
-          description: Always true when the API key is valid.
-          type: boolean
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
       required:
-      - pong
+      - type
+      - code
+      - message
       type: object
   securitySchemes:
     bearerAuth:

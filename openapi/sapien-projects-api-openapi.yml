@@ -139,6 +139,56 @@ paths:
       - Projects
 components:
   schemas:
+    CreateProjectInputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectInputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: Human-readable project name.
+          maxLength: 200
+          minLength: 1
+          type: string
+        spec:
+          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
+          type: object
+      required:
+      - name
+      - spec
+      type: object
+    CreateProjectOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/CreateProjectOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        projectId:
+          description: ID of the newly created project.
+          type: string
+        specId:
+          description: ID of the project's first compiled spec.
+          type: string
+        specVersion:
+          description: Spec version parsed from the submitted spec.
+          type: string
+        status:
+          description: Lifecycle status of the new project (always "active").
+          type: string
+      required:
+      - projectId
+      - specId
+      - specVersion
+      - status
+      type: object
     UpdateProjectInputBody:
       additionalProperties: false
       properties:
@@ -174,119 +224,6 @@ components:
         paused:
           description: Set true to pause new validation claims, false to resume.
           type: boolean
-      type: object
-    CreateProjectOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateProjectOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        projectId:
-          description: ID of the newly created project.
-          type: string
-        specId:
-          description: ID of the project's first compiled spec.
-          type: string
-        specVersion:
-          description: Spec version parsed from the submitted spec.
-          type: string
-        status:
-          description: Lifecycle status of the new project (always "active").
-          type: string
-      required:
-      - projectId
-      - specId
-      - specVersion
-      - status
-      type: object
-    DeveloperStatusError:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/DeveloperStatusError.json
-          format: uri
-          readOnly: true
-          type: string
-        error:
-          $ref: '#/components/schemas/ErrorEnvelope'
-        requestId:
-          type: string
-      required:
-      - error
-      type: object
-    CreateProjectInputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/CreateProjectInputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        name:
-          description: Human-readable project name.
-          maxLength: 200
-          minLength: 1
-          type: string
-        spec:
-          description: Project specification as a JSON object (1:1 mirror of the poq.toml spec).
-          type: object
-      required:
-      - name
-      - spec
-      type: object
-    ListProjectsOutputBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - /developer/v1/ListProjectsOutputBody.json
-          format: uri
-          readOnly: true
-          type: string
-        data:
-          description: Projects in the API key's organization, newest first.
-          items:
-            $ref: '#/components/schemas/ProjectResource'
-          type:
-          - array
-          - 'null'
-        hasMore:
-          description: True when more projects are available after this page.
-          type: boolean
-        nextCursor:
-          description: Cursor to pass as ?cursor= for the next page; null on the last page.
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - hasMore
-      - nextCursor
-      type: object
-    ErrorEnvelope:
-      additionalProperties: false
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        param:
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - code
-      - message
       type: object
     ProjectResource:
       additionalProperties: false
@@ -362,6 +299,69 @@ components:
       - numValidators
       - createdAt
       - updatedAt
+      type: object
+    ErrorEnvelope:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        param:
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - code
+      - message
+      type: object
+    ListProjectsOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/ListProjectsOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+        data:
+          description: Projects in the API key's organization, newest first.
+          items:
+            $ref: '#/components/schemas/ProjectResource'
+          type:
+          - array
+          - 'null'
+        hasMore:
+          description: True when more projects are available after this page.
+          type: boolean
+        nextCursor:
+          description: Cursor to pass as ?cursor= for the next page; null on the last page.
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - hasMore
+      - nextCursor
+      type: object
+    DeveloperStatusError:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - /developer/v1/DeveloperStatusError.json
+          format: uri
+          readOnly: true
+          type: string
+        error:
+          $ref: '#/components/schemas/ErrorEnvelope'
+        requestId:
+          type: string
+      required:
+      - error
       type: object
   securitySchemes:
     bearerAuth:
