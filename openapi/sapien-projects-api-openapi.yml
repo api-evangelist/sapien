@@ -369,3 +369,9 @@ components:
       description: 'Developer API key using the Authorization: Bearer poq_live_... header.'
       scheme: bearer
       type: http
+x-provenance:
+  method: harvested
+  publisher: Sapien
+  source: https://poq.sapien.io/developer/v1/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
