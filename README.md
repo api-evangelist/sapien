@@ -64,6 +64,125 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Sapien is a company surfaced as a portfolio company of general-catalyst and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Sapien is the company behind Proof of Quality (PoQ), an open protocol and consensus/attestation system for verifiable quality signals on AI data and subjective expert outputs. A panel of independent, collateral-backed validators reviews each item against a customer-defined rubric (a poq.toml spec), consensus collapses their scores into one rating per datapoint, and the result is sealed as a permanent onchain attestation (a PoQ Report) — while the underlying data never leaves the customer's systems. Use cases span training-data labeling, fine-tuning and evaluation gates, audit/compliance review, and production safety verification. Sapien ships a live Developer API (/developer/v1) and an MCP server, both authenticated with poq_live_ API keys, and runs on Base Mainnet with a $SAPIEN staking/slashing token. Backed by General Catalyst.
 
-Backed by: general-catalyst
+**Areas:** Company · Artificial Intelligence · Data Quality · Data Labeling · Machine Learning · Human-in-the-Loop · Attestation · Blockchain · Consensus · MCP
+
+## Sapien on APIs.io
+
+Everything profiled for Sapien is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/sapien/](https://apis.io/providers/sapien/)** — or go straight to one of the APIs or properties below.
+
+### APIs (5)
+
+- [Sapien Datapoints API](https://apis.io/apis/sapien/sapien-datapoints-api/) — The Datapoints API from Sapien — 1 operation(s) for datapoints.
+- [Sapien Projects API](https://apis.io/apis/sapien/sapien-projects-api/) — The Projects API from Sapien — 2 operation(s) for projects.
+- [Sapien System API](https://apis.io/apis/sapien/sapien-system-api/) — The System API from Sapien — 1 operation(s) for system.
+- [Sapien Upload Sessions API](https://apis.io/apis/sapien/sapien-upload-sessions-api/) — The Upload Sessions API from Sapien — 6 operation(s) for upload sessions.
+- [Sapien Validators API](https://apis.io/apis/sapien/sapien-validators-api/) — The Validators API from Sapien — 9 operation(s) for validators.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [sapien-poq](https://apis.io/servers/sapien/sapien-poq/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Sapien Agentic Access](https://apis.io/agentic-access/sapien/sapien-agentic-access/)
+
+#### Collections (5)
+
+Postman and Open Collection request collections.
+
+- [Sapien Developer Datapoints API](https://apis.io/collections/sapien/open-sapien-datapoints-api/)
+- [Sapien Developer Datapoints Projects API](https://apis.io/collections/sapien/open-sapien-projects-api/)
+- [Sapien Developer Datapoints System API](https://apis.io/collections/sapien/open-sapien-system-api/)
+- [Sapien Developer Datapoints Upload Sessions API](https://apis.io/collections/sapien/open-sapien-upload-sessions-api/)
+- [Sapien Developer Datapoints Validators API](https://apis.io/collections/sapien/open-sapien-validators-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Sapien Poq Overlay](https://apis.io/overlays/sapien/sapien-poq-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Sapien Authentication](https://apis.io/security/sapien/sapien-authentication/)
+- [Sapien Domain Security](https://apis.io/security/sapien/sapien-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.sapien.io)
+- [Documentation](https://docs.sapien.io/)
+- [Getting started](https://docs.sapien.io/start/quickstart)
+- [Sign up](https://www.sapien.io/developers)
+- [Blog](https://www.sapien.io/blog)
+- [Terms of service](https://www.sapien.io/terms-of-service)
+- [Privacy policy](https://www.sapien.io/privacy-policy)
+- [GitHub](https://github.com/sapien-io)
+
+## API Evangelist rating
+
+**Kin Score 39.3** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 44.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 54.2 |
+| Access clarity | 34.2 |
+
+**Agent readiness 33.9** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | verified |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 22.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/sapien/](https://apis.io/providers/sapien/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Sapien: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/sapien/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
